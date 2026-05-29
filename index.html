@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joyeux Anniversaire Clara ❄️</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(180deg, #08091f 0%, #0d1440 60%, #080921 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #ffffff;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    #snow-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px 30vh;
+      gap: 16px;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(10px, 2vw, 13px);
+      letter-spacing: 6px;
+      color: #6ab4f5;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards 0.3s;
+    }
+
+    .hero-name {
+      font-size: clamp(56px, 18vw, 140px);
+      font-weight: 200;
+      letter-spacing: clamp(8px, 3vw, 24px);
+      text-transform: uppercase;
+      opacity: 0;
+    }
+
+    .hero-divider {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #6ab4f5, transparent);
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 1.2s;
+    }
+
+    .hero-hint {
+      font-size: clamp(8px, 1.5vw, 10px);
+      letter-spacing: 4px;
+      color: #8ecfff;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 1.8s;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .star {
+      position: absolute;
+      color: #ffffff;
+      font-size: 8px;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+    .star:nth-child(1)  { top: 8%;  left: 12%; animation-delay: 0s; }
+    .star:nth-child(2)  { top: 15%; left: 78%; animation-delay: 0.7s; }
+    .star:nth-child(3)  { top: 25%; left: 35%; animation-delay: 1.3s; }
+    .star:nth-child(4)  { top: 40%; left: 88%; animation-delay: 0.4s; }
+    .star:nth-child(5)  { top: 60%; left: 5%;  animation-delay: 1.8s; }
+    .star:nth-child(6)  { top: 72%; left: 55%; animation-delay: 0.9s; }
+    .star:nth-child(7)  { top: 85%; left: 22%; animation-delay: 2.1s; }
+    .star:nth-child(8)  { top: 90%; left: 70%; animation-delay: 0.2s; }
+
+    .message-section {
+      padding: 60px 20px 80px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .message-card {
+      max-width: 640px;
+      width: 100%;
+      background: rgba(20, 40, 80, 0.55);
+      border: 1px solid rgba(100, 160, 255, 0.18);
+      border-radius: 16px;
+      padding: 40px 44px;
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards 2.4s;
+    }
+
+    .quote-open {
+      font-family: Georgia, serif;
+      font-size: 52px;
+      color: #4a80c0;
+      line-height: 0.6;
+      margin-bottom: 12px;
+      display: block;
+      opacity: 0.5;
+    }
+
+    .message-text {
+      font-size: clamp(15px, 2.2vw, 18px);
+      line-height: 1.85;
+      color: #c8dff5;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .quote-close {
+      font-family: Georgia, serif;
+      font-size: 52px;
+      color: #4a80c0;
+      line-height: 0.6;
+      margin-top: 12px;
+      display: block;
+      text-align: right;
+      opacity: 0.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 20px 32px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #3a6090;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 3s;
+    }
+
+    footer a {
+      color: #4a80c0;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: #6ab4f5; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 20px rgba(106,180,245,0.4), 0 0 60px rgba(106,180,245,0.15); }
+      50%       { text-shadow: 0 0 40px rgba(106,180,245,0.8), 0 0 100px rgba(106,180,245,0.35), 0 0 140px rgba(192,160,255,0.2); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50%       { opacity: 0.7; transform: scale(1.2); }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes aurora {
+      0%   { transform: translateX(-10%) skewX(-8deg); opacity: 0.18; }
+      50%  { transform: translateX(5%) skewX(4deg);  opacity: 0.28; }
+      100% { transform: translateX(-10%) skewX(-8deg); opacity: 0.18; }
+    }
+
+    @keyframes aurora2 {
+      0%   { transform: translateX(8%) skewX(6deg);  opacity: 0.12; }
+      50%  { transform: translateX(-6%) skewX(-5deg); opacity: 0.22; }
+      100% { transform: translateX(8%) skewX(6deg);  opacity: 0.12; }
+    }
+
+    @keyframes floatCrystal {
+      0%   { transform: translateY(0px)   rotate(0deg)   scale(1);    opacity: 0.6; }
+      33%  { transform: translateY(-18px) rotate(60deg)  scale(1.15); opacity: 0.9; }
+      66%  { transform: translateY(-8px)  rotate(120deg) scale(0.95); opacity: 0.7; }
+      100% { transform: translateY(0px)   rotate(180deg) scale(1);    opacity: 0.6; }
+    }
+
+    /* Aurora borealis */
+    .aurora {
+      position: fixed;
+      top: 0; left: -20%;
+      width: 140%; height: 55vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .aurora-band {
+      position: absolute;
+      left: 0; width: 100%;
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+    .aurora-band:nth-child(1) {
+      top: -10%; height: 40%;
+      background: linear-gradient(180deg, transparent 0%, rgba(64,200,180,0.22) 50%, transparent 100%);
+      animation: aurora 9s ease-in-out infinite;
+    }
+    .aurora-band:nth-child(2) {
+      top: 5%; height: 35%;
+      background: linear-gradient(180deg, transparent 0%, rgba(100,160,255,0.18) 50%, transparent 100%);
+      animation: aurora2 12s ease-in-out infinite;
+    }
+    .aurora-band:nth-child(3) {
+      top: 15%; height: 30%;
+      background: linear-gradient(180deg, transparent 0%, rgba(180,120,255,0.12) 50%, transparent 100%);
+      animation: aurora 15s ease-in-out infinite 2s;
+    }
+
+    /* Tagline */
+    .hero-tagline {
+      font-size: clamp(11px, 1.8vw, 14px);
+      color: #a0ccee;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 1px;
+      max-width: 520px;
+      line-height: 1.6;
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards 1.5s;
+    }
+
+    /* Shimmer on CLARA */
+    .hero-name {
+      background: linear-gradient(90deg,
+        #ffffff 0%, #ffffff 35%,
+        #a8d8ff 45%, #e8f4ff 50%, #c0a0ff 55%,
+        #ffffff 65%, #ffffff 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeIn 1.4s ease forwards 0.7s, glow 3s ease-in-out infinite 2s, shimmer 4s linear infinite 3s;
+    }
+
+    /* Floating ice crystals */
+    .crystals {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .crystal {
+      position: absolute;
+      font-size: 18px;
+      animation: floatCrystal ease-in-out infinite;
+      opacity: 0.6;
+    }
+    .crystal:nth-child(1) { top: 12%; left: 6%;  font-size:14px; animation-duration:6s;  animation-delay:0s; }
+    .crystal:nth-child(2) { top: 28%; left: 92%; font-size:20px; animation-duration:8s;  animation-delay:1s; }
+    .crystal:nth-child(3) { top: 45%; left: 3%;  font-size:12px; animation-duration:7s;  animation-delay:2.5s; }
+    .crystal:nth-child(4) { top: 65%; left: 95%; font-size:16px; animation-duration:9s;  animation-delay:0.5s; }
+    .crystal:nth-child(5) { top: 20%; left: 48%; font-size:10px; animation-duration:5s;  animation-delay:3s; }
+    .crystal:nth-child(6) { top: 80%; left: 15%; font-size:22px; animation-duration:10s; animation-delay:1.5s; }
+    .crystal:nth-child(7) { top: 55%; left: 82%; font-size:13px; animation-duration:6.5s;animation-delay:4s; }
+
+    .mountains {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 45vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .mountains svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="snow-canvas" aria-hidden="true"></canvas>
+
+<div class="aurora" aria-hidden="true">
+  <div class="aurora-band"></div>
+  <div class="aurora-band"></div>
+  <div class="aurora-band"></div>
+</div>
+
+<div class="crystals" aria-hidden="true">
+  <span class="crystal">❄</span>
+  <span class="crystal">❅</span>
+  <span class="crystal">❆</span>
+  <span class="crystal">❄</span>
+  <span class="crystal">❅</span>
+  <span class="crystal">❆</span>
+  <span class="crystal">❄</span>
+</div>
+
+<div class="stars" aria-hidden="true">
+  <span class="star">✦</span>
+  <span class="star">✧</span>
+  <span class="star">✦</span>
+  <span class="star">✧</span>
+  <span class="star">✦</span>
+  <span class="star">✧</span>
+  <span class="star">✦</span>
+  <span class="star">✧</span>
+</div>
+
+<div class="mountains" aria-hidden="true">
+  <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Far mountains (lightest) -->
+    <polygon points="0,400 0,280 120,180 240,260 380,140 500,220 640,120 760,200 900,100 1020,190 1160,130 1280,210 1440,150 1440,400" fill="#0d1a3a"/>
+    <!-- Far snow caps -->
+    <polygon points="120,180 90,210 150,210" fill="rgba(220,235,255,0.25)"/>
+    <polygon points="380,140 345,175 415,175" fill="rgba(220,235,255,0.3)"/>
+    <polygon points="640,120 600,160 680,160" fill="rgba(220,235,255,0.35)"/>
+    <polygon points="900,100 858,145 942,145" fill="rgba(220,235,255,0.3)"/>
+    <polygon points="1160,130 1120,168 1200,168" fill="rgba(220,235,255,0.25)"/>
+    <!-- Mid mountains -->
+    <polygon points="0,400 0,320 80,240 200,300 320,200 440,280 560,170 680,260 800,180 920,270 1040,160 1160,250 1280,190 1440,270 1440,400" fill="#0a1428"/>
+    <!-- Mid snow caps -->
+    <polygon points="320,200 292,228 348,228" fill="rgba(220,235,255,0.4)"/>
+    <polygon points="560,170 528,202 592,202" fill="rgba(220,235,255,0.45)"/>
+    <polygon points="800,180 766,214 834,214" fill="rgba(220,235,255,0.4)"/>
+    <polygon points="1040,160 1004,198 1076,198" fill="rgba(220,235,255,0.45)"/>
+    <!-- Near mountains (darkest, foreground) -->
+    <polygon points="0,400 0,350 100,280 220,340 340,250 460,320 580,220 700,310 820,240 940,330 1060,230 1180,320 1300,260 1440,330 1440,400" fill="#070e1e"/>
+    <!-- Near snow caps -->
+    <polygon points="340,250 316,272 364,272" fill="rgba(240,248,255,0.55)"/>
+    <polygon points="580,220 552,246 608,246" fill="rgba(240,248,255,0.6)"/>
+    <polygon points="820,240 792,266 848,266" fill="rgba(240,248,255,0.55)"/>
+    <polygon points="1060,230 1030,260 1090,260" fill="rgba(240,248,255,0.6)"/>
+    <!-- Ground/snow base -->
+    <rect x="0" y="370" width="1440" height="30" fill="#070e1e"/>
+    <rect x="0" y="378" width="1440" height="22" fill="rgba(200,220,255,0.06)"/>
+  </svg>
+</div>
+
+<div class="page">
+  <section class="hero">
+    <div class="hero-subtitle">✦ &nbsp; JOYEUX ANNIVERSAIRE &nbsp; ✦</div>
+    <div class="hero-tagline">Il n'y a pas de neige dans cette saison,<br>mais je t'en ramènerai toujours d'une façon ou d'une autre ❄</div>
+    <h1 class="hero-name">Clara</h1>
+    <div class="hero-divider"></div>
+    <div class="hero-hint">❄ &nbsp; CLIQUE PARTOUT POUR DE LA NEIGE &nbsp; ❄</div>
+  </section>
+
+  <section class="message-section">
+    <div class="message-card">
+      <span class="quote-open">"</span>
+      <p class="message-text">Clara tu es la personne la plus merveilleuse que j'ai rencontré de ma vie, tu as toujours été ma meilleure amie et tu le restera pour toujours, je te souhaite un joyeux anniversaire car tu le mérites et encore plus&nbsp;! Je t'aime mon bébékadom et je sais qu'un jour tu te réveillera un bon matin totalement guéri, car Dieu fait toujours des miracles.</p>
+      <span class="quote-close">"</span>
+    </div>
+  </section>
+
+  <footer>
+    ❄ &nbsp; FAIT AVEC ❤️ PAR <a href="https://loyal.ac" target="_blank" rel="noopener">LOYAL</a> &nbsp; ❄
+  </footer>
+</div>
+
+<script>
+(function () {
+  const canvas = document.getElementById('snow-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let W = window.innerWidth;
+  let H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+
+  window.addEventListener('resize', () => {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+  });
+
+  class Flake {
+    constructor(x, y, isBurst) {
+      this.reset(x, y, isBurst);
+    }
+
+    reset(x, y, isBurst = false) {
+      this.x = x !== undefined ? x : Math.random() * W;
+      this.y = y !== undefined ? y : Math.random() * -H;
+      this.r = isBurst ? Math.random() * 3 + 1 : Math.random() * 3 + 0.5;
+      this.speed = isBurst ? Math.random() * 4 + 1 : Math.random() * 1.2 + 0.3;
+      this.wind = isBurst
+        ? (Math.random() - 0.5) * 8
+        : (Math.random() - 0.5) * 0.6;
+      this.opacity = isBurst ? Math.random() * 0.9 + 0.1 : Math.random() * 0.7 + 0.2;
+      this.isBurst = isBurst;
+      this.life = isBurst ? Math.random() * 80 + 40 : Infinity;
+      this.age = 0;
+    }
+
+    update() {
+      this.x += this.wind;
+      this.y += this.speed;
+      this.age++;
+      if (this.isBurst) {
+        this.opacity = Math.max(0, this.opacity - 0.012);
+        this.speed += 0.08;
+      }
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200, 230, 255, ${this.opacity})`;
+      ctx.fill();
+    }
+
+    isDead() {
+      return this.y > H + 10 || this.age > this.life || this.opacity <= 0;
+    }
+  }
+
+  const flakes = Array.from({ length: 150 }, () => new Flake());
+
+  /* ── Ripple rings on click ── */
+  const ripples = [];
+
+  function spawnRipple(x, y) {
+    ripples.push({ x, y, r: 0, maxR: 80 + Math.random() * 60, opacity: 0.7, speed: 2.5 + Math.random() * 1.5 });
+    ripples.push({ x, y, r: 0, maxR: 50 + Math.random() * 30, opacity: 0.5, speed: 3.5 + Math.random() });
+  }
+
+  function animateWithRipples() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (let i = flakes.length - 1; i >= 0; i--) {
+      const f = flakes[i];
+      f.update();
+      f.draw();
+      if (f.isDead()) {
+        if (f.isBurst) { flakes.splice(i, 1); } else { f.reset(); }
+      }
+    }
+
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      const rp = ripples[i];
+      rp.r += rp.speed;
+      rp.opacity -= 0.015;
+      if (rp.opacity <= 0 || rp.r > rp.maxR) { ripples.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(160, 210, 255, ${rp.opacity})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(animateWithRipples);
+  }
+
+  animateWithRipples();
+
+  document.addEventListener('click', (e) => {
+    for (let i = 0; i < 28; i++) {
+      flakes.push(new Flake(e.clientX, e.clientY, true));
+    }
+    spawnRipple(e.clientX, e.clientY);
+  });
+})();
+</script>
+</body>
+</html>
