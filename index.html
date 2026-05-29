@@ -16,358 +16,371 @@
       cursor: crosshair;
       animation: bgShift 14s ease-in-out infinite alternate;
     }
-
     @keyframes bgShift {
-      0%   { background: linear-gradient(160deg, #fff0f8 0%, #f5e8ff 35%, #eaefff 65%, #f0fbff 100%); }
-      33%  { background: linear-gradient(160deg, #fce8ff 0%, #ffe0f5 35%, #f0e8ff 65%, #e8f5ff 100%); }
-      66%  { background: linear-gradient(160deg, #f0eaff 0%, #ffe8f5 35%, #fce0ff 65%, #eef8ff 100%); }
-      100% { background: linear-gradient(160deg, #fff0fc 0%, #f0e8ff 35%, #e8f0ff 65%, #f5fff8 100%); }
+      0%   { background: linear-gradient(160deg,#fff0f8 0%,#f5e8ff 35%,#eaefff 65%,#f0fbff 100%); }
+      33%  { background: linear-gradient(160deg,#fce8ff 0%,#ffe0f5 35%,#f0e8ff 65%,#e8f5ff 100%); }
+      66%  { background: linear-gradient(160deg,#f0eaff 0%,#ffe8f5 35%,#fce0ff 65%,#eef8ff 100%); }
+      100% { background: linear-gradient(160deg,#fff0fc 0%,#f0e8ff 35%,#e8f0ff 65%,#f5fff8 100%); }
     }
 
-    #snow-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .page {
-      position: relative;
-      z-index: 1;
-    }
+    #snow-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+    .page-z { position:relative; z-index:1; }
 
     /* ── HERO ── */
     .hero {
-      min-height: 100vh;
+      min-height:100vh; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; text-align:center;
+      padding:40px 20px 30vh; gap:16px;
+      transform-style:preserve-3d; transition:transform 0.08s ease-out; will-change:transform;
+    }
+    .hero-subtitle {
+      font-size:clamp(24px,5.5vw,58px); letter-spacing:clamp(3px,1.2vw,10px);
+      font-weight:300; text-transform:uppercase; color:#ffb0e0; opacity:0;
+      animation:fadeIn 1.2s ease forwards 0.3s, ledCycle 3s linear infinite 1.5s;
+    }
+    .hero-tagline {
+      font-size:clamp(11px,1.8vw,14px); color:#a070c0; font-weight:300;
+      font-style:italic; letter-spacing:1px; max-width:520px; line-height:1.6;
+      opacity:0; animation:fadeIn 1.2s ease forwards 1.5s;
+    }
+    .hero-name-wrapper { animation:swing3d 7s ease-in-out infinite 2.5s; transform-style:preserve-3d; }
+    .hero-name {
+      font-size:clamp(56px,18vw,140px); font-weight:200;
+      letter-spacing:clamp(8px,3vw,24px); text-transform:uppercase; opacity:0; display:block;
+      background:linear-gradient(90deg,#d060c0 0%,#d060c0 30%,#f0a0e0 42%,#ffffff 50%,#b090ff 58%,#9060e0 70%,#9060e0 100%);
+      background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      animation:fadeIn 1.4s ease forwards 0.7s, glowPink 3s ease-in-out infinite 2s, shimmer 4s linear infinite 3s;
+    }
+    .hero-divider { width:80px; height:1px; background:linear-gradient(90deg,transparent,#d080e0,transparent); opacity:0; animation:fadeIn 1s ease forwards 1.2s; }
+    .hero-hint { font-size:clamp(8px,1.5vw,10px); letter-spacing:4px; color:#c080d8; opacity:0; animation:fadeIn 1s ease forwards 1.8s; }
+
+    /* ── AURORA ── */
+    .aurora { position:fixed; top:0; left:-20%; width:140%; height:60vh; pointer-events:none; z-index:0; overflow:hidden; }
+    .aurora-band { position:absolute; left:0; width:100%; border-radius:50%; filter:blur(45px); }
+    .aurora-band:nth-child(1) { top:-5%; height:45%; background:linear-gradient(180deg,transparent,rgba(255,160,220,.25),transparent); animation:aurora 9s ease-in-out infinite; }
+    .aurora-band:nth-child(2) { top:8%;  height:40%; background:linear-gradient(180deg,transparent,rgba(200,150,255,.2),transparent); animation:aurora2 12s ease-in-out infinite; }
+    .aurora-band:nth-child(3) { top:18%; height:35%; background:linear-gradient(180deg,transparent,rgba(150,210,255,.15),transparent); animation:aurora 15s ease-in-out infinite 2s; }
+
+    /* ── BOKEH ── */
+    .bokeh { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
+    .bok { position:absolute; border-radius:50%; animation:bokehFloat ease-in-out infinite; filter:blur(2px); }
+    .bok:nth-child(1){width:90px;height:90px;top:10%;left:8%;background:rgba(255,180,220,.18);animation-duration:11s}
+    .bok:nth-child(2){width:60px;height:60px;top:30%;left:85%;background:rgba(200,160,255,.15);animation-duration:14s;animation-delay:2s}
+    .bok:nth-child(3){width:120px;height:120px;top:55%;left:5%;background:rgba(180,220,255,.12);animation-duration:16s;animation-delay:1s}
+    .bok:nth-child(4){width:70px;height:70px;top:70%;left:75%;background:rgba(255,200,230,.16);animation-duration:10s;animation-delay:3s}
+    .bok:nth-child(5){width:50px;height:50px;top:20%;left:45%;background:rgba(220,180,255,.14);animation-duration:13s;animation-delay:5s}
+    .bok:nth-child(6){width:100px;height:100px;top:80%;left:40%;background:rgba(255,220,240,.13);animation-duration:18s;animation-delay:.5s}
+
+    /* ── STARS / CRYSTALS ── */
+    .stars { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+    .star  { position:absolute; font-size:8px; animation:twinkle 3s ease-in-out infinite; }
+    .star:nth-child(1){top:8%;left:12%;color:#e080c0;animation-delay:0s}
+    .star:nth-child(2){top:15%;left:78%;color:#b080f0;animation-delay:.7s}
+    .star:nth-child(3){top:25%;left:35%;color:#e0a0d0;animation-delay:1.3s}
+    .star:nth-child(4){top:40%;left:88%;color:#c090ff;animation-delay:.4s}
+    .star:nth-child(5){top:60%;left:5%;color:#f0a0e0;animation-delay:1.8s}
+    .star:nth-child(6){top:72%;left:55%;color:#b070e0;animation-delay:.9s}
+    .star:nth-child(7){top:85%;left:22%;color:#e090d0;animation-delay:2.1s}
+    .star:nth-child(8){top:90%;left:70%;color:#c080f0;animation-delay:.2s}
+    .crystals { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+    .crystal { position:absolute; animation:floatCrystal ease-in-out infinite; opacity:.5; }
+    .crystal:nth-child(1){top:12%;left:6%;font-size:14px;color:#d080e0;animation-duration:6s}
+    .crystal:nth-child(2){top:28%;left:92%;font-size:20px;color:#b070f0;animation-duration:8s;animation-delay:1s}
+    .crystal:nth-child(3){top:45%;left:3%;font-size:12px;color:#e090c0;animation-duration:7s;animation-delay:2.5s}
+    .crystal:nth-child(4){top:65%;left:95%;font-size:16px;color:#c080ff;animation-duration:9s;animation-delay:.5s}
+    .crystal:nth-child(5){top:20%;left:48%;font-size:10px;color:#f0a0d0;animation-duration:5s;animation-delay:3s}
+    .crystal:nth-child(6){top:80%;left:15%;font-size:22px;color:#b060e0;animation-duration:10s;animation-delay:1.5s}
+    .crystal:nth-child(7){top:55%;left:82%;font-size:13px;color:#d090f0;animation-duration:6.5s;animation-delay:4s}
+
+    /* ── MOUNTAINS ── */
+    .mountains { position:fixed; bottom:0; left:0; width:100%; height:45vh; z-index:0; pointer-events:none; }
+    .mtn-layer { position:absolute; top:0; left:0; width:100%; height:100%; will-change:transform; transition:transform 0.12s ease-out; }
+    .mtn-layer svg { width:100%; height:100%; display:block; overflow:visible; }
+
+    /* ═══════════════════════════════════════
+       3D BOOK
+    ════════════════════════════════════════ */
+    .book-section {
+      padding: 40px 20px 80px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px 20px 30vh;
-      gap: 16px;
-      transform-style: preserve-3d;
-      transition: transform 0.08s ease-out;
-      will-change: transform;
+      gap: 28px;
     }
 
-    .hero-subtitle {
-      font-size: clamp(24px, 5.5vw, 58px);
-      letter-spacing: clamp(3px, 1.2vw, 10px);
-      font-weight: 300;
-      text-transform: uppercase;
-      color: #ffb0e0;
-      opacity: 0;
-      animation: fadeIn 1.2s ease forwards 0.3s, ledCycle 3s linear infinite 1.5s;
-    }
-
-    .hero-tagline {
-      font-size: clamp(11px, 1.8vw, 14px);
-      color: #a070c0;
-      font-weight: 300;
-      font-style: italic;
-      letter-spacing: 1px;
-      max-width: 520px;
-      line-height: 1.6;
-      opacity: 0;
-      animation: fadeIn 1.2s ease forwards 1.5s;
-    }
-
-    /* 3D wrapper for CLARA */
-    .hero-name-wrapper {
-      animation: swing3d 7s ease-in-out infinite 2.5s;
-      transform-style: preserve-3d;
-    }
-
-    .hero-name {
-      font-size: clamp(56px, 18vw, 140px);
-      font-weight: 200;
-      letter-spacing: clamp(8px, 3vw, 24px);
-      text-transform: uppercase;
-      opacity: 0;
-      display: block;
-      background: linear-gradient(90deg,
-        #d060c0 0%, #d060c0 30%,
-        #f0a0e0 42%, #ffffff 50%, #b090ff 58%,
-        #9060e0 70%, #9060e0 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: fadeIn 1.4s ease forwards 0.7s, glowPink 3s ease-in-out infinite 2s, shimmer 4s linear infinite 3s;
-    }
-
-    .hero-divider {
-      width: 80px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #d080e0, transparent);
-      opacity: 0;
-      animation: fadeIn 1s ease forwards 1.2s;
-    }
-
-    .hero-hint {
-      font-size: clamp(8px, 1.5vw, 10px);
-      letter-spacing: 4px;
+    .book-section-title {
+      font-size: 12px;
+      letter-spacing: 5px;
       color: #c080d8;
+      text-transform: uppercase;
       opacity: 0;
-      animation: fadeIn 1s ease forwards 1.8s;
+      animation: fadeIn 1s ease forwards 2.8s;
     }
 
-    /* ── AURORA ── */
-    .aurora {
-      position: fixed;
-      top: 0; left: -20%;
-      width: 140%; height: 60vh;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .aurora-band {
-      position: absolute;
-      left: 0; width: 100%;
-      border-radius: 50%;
-      filter: blur(45px);
-    }
-    .aurora-band:nth-child(1) {
-      top: -5%; height: 45%;
-      background: linear-gradient(180deg, transparent 0%, rgba(255,160,220,0.25) 50%, transparent 100%);
-      animation: aurora 9s ease-in-out infinite;
-    }
-    .aurora-band:nth-child(2) {
-      top: 8%; height: 40%;
-      background: linear-gradient(180deg, transparent 0%, rgba(200,150,255,0.2) 50%, transparent 100%);
-      animation: aurora2 12s ease-in-out infinite;
-    }
-    .aurora-band:nth-child(3) {
-      top: 18%; height: 35%;
-      background: linear-gradient(180deg, transparent 0%, rgba(150,210,255,0.15) 50%, transparent 100%);
-      animation: aurora 15s ease-in-out infinite 2s;
+    .book-scene {
+      perspective: 3200px;
+      perspective-origin: 50% 38%;
     }
 
-    /* ── BOKEH ── */
-    .bokeh {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .bok {
-      position: absolute;
-      border-radius: 50%;
-      animation: bokehFloat ease-in-out infinite;
-      filter: blur(2px);
-    }
-    .bok:nth-child(1) { width:90px;  height:90px;  top:10%; left:8%;  background:rgba(255,180,220,0.18); animation-duration:11s; animation-delay:0s; }
-    .bok:nth-child(2) { width:60px;  height:60px;  top:30%; left:85%; background:rgba(200,160,255,0.15); animation-duration:14s; animation-delay:2s; }
-    .bok:nth-child(3) { width:120px; height:120px; top:55%; left:5%;  background:rgba(180,220,255,0.12); animation-duration:16s; animation-delay:1s; }
-    .bok:nth-child(4) { width:70px;  height:70px;  top:70%; left:75%; background:rgba(255,200,230,0.16); animation-duration:10s; animation-delay:3s; }
-    .bok:nth-child(5) { width:50px;  height:50px;  top:20%; left:45%; background:rgba(220,180,255,0.14); animation-duration:13s; animation-delay:5s; }
-    .bok:nth-child(6) { width:100px; height:100px; top:80%; left:40%; background:rgba(255,220,240,0.13); animation-duration:18s; animation-delay:0.5s; }
-
-    /* ── STARS ── */
-    .stars {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .star {
-      position: absolute;
-      font-size: 8px;
-      animation: twinkle 3s ease-in-out infinite;
-    }
-    .star:nth-child(1)  { top: 8%;  left: 12%; color:#e080c0; animation-delay: 0s; }
-    .star:nth-child(2)  { top: 15%; left: 78%; color:#b080f0; animation-delay: 0.7s; }
-    .star:nth-child(3)  { top: 25%; left: 35%; color:#e0a0d0; animation-delay: 1.3s; }
-    .star:nth-child(4)  { top: 40%; left: 88%; color:#c090ff; animation-delay: 0.4s; }
-    .star:nth-child(5)  { top: 60%; left: 5%;  color:#f0a0e0; animation-delay: 1.8s; }
-    .star:nth-child(6)  { top: 72%; left: 55%; color:#b070e0; animation-delay: 0.9s; }
-    .star:nth-child(7)  { top: 85%; left: 22%; color:#e090d0; animation-delay: 2.1s; }
-    .star:nth-child(8)  { top: 90%; left: 70%; color:#c080f0; animation-delay: 0.2s; }
-
-    /* ── CRYSTALS ── */
-    .crystals {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .crystal {
-      position: absolute;
-      animation: floatCrystal ease-in-out infinite;
-      opacity: 0.5;
-    }
-    .crystal:nth-child(1) { top:12%; left:6%;  font-size:14px; color:#d080e0; animation-duration:6s;   animation-delay:0s; }
-    .crystal:nth-child(2) { top:28%; left:92%; font-size:20px; color:#b070f0; animation-duration:8s;   animation-delay:1s; }
-    .crystal:nth-child(3) { top:45%; left:3%;  font-size:12px; color:#e090c0; animation-duration:7s;   animation-delay:2.5s; }
-    .crystal:nth-child(4) { top:65%; left:95%; font-size:16px; color:#c080ff; animation-duration:9s;   animation-delay:0.5s; }
-    .crystal:nth-child(5) { top:20%; left:48%; font-size:10px; color:#f0a0d0; animation-duration:5s;   animation-delay:3s; }
-    .crystal:nth-child(6) { top:80%; left:15%; font-size:22px; color:#b060e0; animation-duration:10s;  animation-delay:1.5s; }
-    .crystal:nth-child(7) { top:55%; left:82%; font-size:13px; color:#d090f0; animation-duration:6.5s; animation-delay:4s; }
-
-    /* ── MOUNTAINS (3 layers for parallax) ── */
-    .mountains {
-      position: fixed;
-      bottom: 0; left: 0;
-      width: 100%; height: 45vh;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .mtn-layer {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      will-change: transform;
-      transition: transform 0.12s ease-out;
-    }
-    .mtn-layer svg {
-      width: 100%; height: 100%;
-      display: block;
-      overflow: visible;
-    }
-
-    /* ── MESSAGE ── */
-    .message-section {
-      padding: 60px 20px 80px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .message-card {
-      max-width: 640px;
-      width: 100%;
-      background: rgba(255, 240, 255, 0.65);
-      border: 1px solid rgba(200, 130, 220, 0.25);
-      border-radius: 20px;
-      padding: 40px 44px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 40px rgba(180,100,220,0.1), 0 2px 12px rgba(200,150,255,0.08);
-      opacity: 0;
-      animation: fadeIn 1.2s ease forwards 2.4s;
-      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+    .book {
+      width: 560px;
+      height: 380px;
+      position: relative;
       transform-style: preserve-3d;
-      will-change: transform;
+      animation: bookFloat 5s ease-in-out infinite;
+      filter: drop-shadow(0 30px 40px rgba(160,80,200,.22)) drop-shadow(0 8px 16px rgba(180,100,220,.15));
+    }
+    @media (max-width: 620px) {
+      .book { width: 320px; height: 220px; }
+      .book-half, .book-page { width: 160px !important; height: 220px !important; }
+      .book-spine { height: 220px !important; }
+      .pf { padding: 14px 12px !important; }
+      .pf .pg-title { font-size: 18px !important; }
+      .pf p, .pf .pg-quote { font-size: 11px !important; }
     }
 
-    .message-card .card-shine {
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      pointer-events: none;
-      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18) 0%, transparent 65%);
-      transition: background 0.1s ease-out;
+    /* Static left half (background for backs of flipped pages) */
+    .book-left-base {
+      position: absolute; top: 0; left: 0;
+      width: 280px; height: 380px;
+      background: linear-gradient(135deg, #fdf5ff 0%, #fef0ff 100%);
+      border-radius: 5px 0 0 5px;
+      border: 1px solid rgba(200,140,230,.25);
+      border-right: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .book-left-base::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 26px, rgba(200,150,230,.06) 27px);
+    }
+    /* subtle page edge lines on left */
+    .book-left-base::after {
+      content: '';
+      position: absolute; top: 4px; right: 0; bottom: 4px; width: 8px;
+      background: linear-gradient(90deg, rgba(200,140,220,.12), rgba(200,140,220,.06));
     }
 
-    .quote-open {
-      font-family: Georgia, serif;
-      font-size: 56px;
-      color: #d070c0;
-      line-height: 0.6;
-      margin-bottom: 12px;
-      display: block;
-      opacity: 0.45;
+    /* Static right base (last page — revealed when all 3 pages flipped) */
+    .book-right-base {
+      position: absolute; top: 0; right: 0;
+      width: 280px; height: 380px;
+      border-radius: 0 5px 5px 0;
+      border: 1px solid rgba(200,140,230,.25);
+      border-left: none;
+      overflow: hidden;
+      z-index: 0;
     }
 
-    .message-text {
-      font-size: clamp(15px, 2.2vw, 18px);
-      line-height: 1.85;
-      color: #4a1a6a;
-      font-style: italic;
-      font-weight: 300;
+    /* Spine */
+    .book-spine {
+      position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 14px; height: 380px;
+      background: linear-gradient(180deg, #e8a0d8, #c070e8, #d890d8, #c070e8, #e8a0d8);
+      z-index: 8;
+      box-shadow: 0 0 12px rgba(180,80,220,.5), inset 2px 0 4px rgba(255,255,255,.3), inset -2px 0 4px rgba(0,0,0,.1);
     }
 
-    .quote-close {
-      font-family: Georgia, serif;
-      font-size: 56px;
-      color: #d070c0;
-      line-height: 0.6;
-      margin-top: 12px;
-      display: block;
-      text-align: right;
-      opacity: 0.45;
+    /* ── Flip pages ── */
+    .book-page {
+      position: absolute; top: 0; left: 280px;
+      width: 280px; height: 380px;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+    }
+    .book-page.flipping {
+      transition: transform 1.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+      z-index: 20 !important;
+    }
+    .book-page.flipped {
+      transform: rotateY(-180deg);
+    }
+
+    /* Page face (front & back) */
+    .pf {
+      position: absolute; top: 0; left: 0;
+      width: 280px; height: 380px;
+      backface-visibility: hidden;
+      padding: 28px 24px 20px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    /* Front face (right side) */
+    .pf.front {
+      background: linear-gradient(160deg, #fffbff 0%, #fdf5ff 60%, #fef8ff 100%);
+      border-radius: 0 5px 5px 0;
+      border: 1px solid rgba(200,140,230,.2);
+      border-left: none;
+    }
+    .pf.front::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 26px, rgba(200,150,230,.05) 27px);
+    }
+    /* Back face (left side when flipped) */
+    .pf.back {
+      background: linear-gradient(160deg, #fef8ff 0%, #fdf5ff 60%, #fffbff 100%);
+      border-radius: 5px 0 0 5px;
+      border: 1px solid rgba(200,140,230,.2);
+      border-right: none;
+      transform: rotateY(180deg);
+    }
+    .pf.back::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 26px, rgba(200,150,230,.05) 27px);
+    }
+    /* Page curl shadow on right edge of front pages */
+    .pf.front::after {
+      content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 12px;
+      background: linear-gradient(90deg, transparent, rgba(180,120,210,.06));
+    }
+
+    /* ── Page content styles ── */
+    .pg-deco {
+      text-align: center; color: #d090e0; font-size: 16px;
+      letter-spacing: 6px; margin-bottom: 10px; flex-shrink: 0;
+    }
+    .pg-title {
+      text-align: center;
+      font-size: 22px; font-weight: 200; letter-spacing: 4px;
+      color: #8040b0; margin-bottom: 8px; flex-shrink: 0;
+    }
+    .pg-divider {
+      width: 50px; height: 1px; margin: 0 auto 16px;
+      background: linear-gradient(90deg, transparent, #d080e0, transparent);
+      flex-shrink: 0;
+    }
+    .pg-quote {
+      font-family: Georgia, serif; font-size: 32px;
+      color: #d070c0; line-height: 0.6; opacity: .4; flex-shrink: 0;
+    }
+    .pf p {
+      font-size: 13px; line-height: 1.85; color: #4a1a6a;
+      font-style: italic; font-weight: 300; flex: 1;
+    }
+    .pg-num {
+      text-align: center; font-size: 9px; letter-spacing: 3px;
+      color: #c090d8; margin-top: 8px; flex-shrink: 0;
+    }
+    .pg-snowflakes {
+      text-align: center; font-size: 13px; color: #d090e0;
+      letter-spacing: 4px; margin: auto 0 0; flex-shrink: 0;
+    }
+
+    /* Cover special styles */
+    .pf.cover-front {
+      background: linear-gradient(145deg, #f8e0ff 0%, #ffe0f5 40%, #e8e0ff 80%, #f0f8ff 100%);
+      border-radius: 0 5px 5px 0;
+      border: 1px solid rgba(200,140,230,.3); border-left: none;
+      justify-content: center; align-items: center; text-align: center; gap: 10px;
+    }
+    .cover-ornament { font-size: 28px; color: #d080e0; letter-spacing: 6px; }
+    .cover-year     { font-size: 10px; letter-spacing: 5px; color: #c080d8; margin-top: 4px; }
+    .cover-name     { font-size: 36px; font-weight: 200; letter-spacing: 8px; color: #7030a0; }
+    .cover-subtitle { font-size: 11px; letter-spacing: 3px; color: #b070c8; font-style: italic; }
+    .cover-border {
+      position: absolute; inset: 10px; border: 1px solid rgba(200,140,220,.35); border-radius: 4px;
+      background: transparent; pointer-events: none;
+    }
+    .cover-border::before {
+      content: ''; position: absolute; inset: 6px;
+      border: 1px solid rgba(200,140,220,.18); border-radius: 2px;
+    }
+
+    /* Back of cover (left page spread 1 — decorative) */
+    .pf.deco-left {
+      justify-content: center; align-items: center; text-align: center; gap: 12px;
+      border-radius: 5px 0 0 5px;
+    }
+
+    /* Closing page */
+    .pf.closing {
+      background: linear-gradient(145deg, #fef0ff 0%, #fff0f8 50%, #f8f0ff 100%);
+      justify-content: center; align-items: center; text-align: center; gap: 8px;
+      border-radius: 0 5px 5px 0;
+      border: 1px solid rgba(200,140,230,.25); border-left: none;
+    }
+    .closing-heart { font-size: 32px; animation: heartPulse 2s ease-in-out infinite; }
+    @keyframes heartPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+    .closing-sig { font-size: 13px; letter-spacing: 3px; color: #a050c0; }
+    .closing-link { font-size: 10px; color: #c080d8; letter-spacing: 2px; }
+    .closing-link a { color: #c060d0; text-decoration: none; }
+    .closing-link a:hover { color: #e080e0; }
+
+    /* ── Book navigation ── */
+    .book-nav {
+      display: flex; align-items: center; gap: 20px;
+      opacity: 0; animation: fadeIn 1s ease forwards 3.2s;
+    }
+    .book-btn {
+      width: 42px; height: 42px; border-radius: 50%;
+      border: 1px solid rgba(200,140,220,.4);
+      background: rgba(255,240,255,.7);
+      backdrop-filter: blur(8px);
+      color: #9040b8; font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; user-select: none;
+    }
+    .book-btn:hover:not(:disabled) {
+      background: rgba(220,180,255,.6);
+      border-color: rgba(180,100,220,.6);
+      transform: scale(1.08);
+      box-shadow: 0 4px 16px rgba(160,80,220,.2);
+    }
+    .book-btn:disabled { opacity: .3; cursor: default; }
+    .book-indicator {
+      font-size: 10px; letter-spacing: 3px; color: #b080c8;
+      min-width: 60px; text-align: center;
+    }
+    .book-hint {
+      font-size: 9px; letter-spacing: 2px; color: #c0a0d0;
+      text-align: center;
+    }
+
+    @keyframes bookFloat {
+      0%,100% { transform: translateY(0px) rotateX(2deg); }
+      50%      { transform: translateY(-8px) rotateX(1deg); }
     }
 
     /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 24px 20px 32px;
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: #b080c0;
-      opacity: 0;
-      animation: fadeIn 1s ease forwards 3s;
-    }
-    footer a {
-      color: #c060d0;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    footer a:hover { color: #e080e0; }
+    footer { text-align:center; padding:24px 20px 32px; font-size:10px; letter-spacing:3px; color:#b080c0; opacity:0; animation:fadeIn 1s ease forwards 3s; }
+    footer a { color:#c060d0; text-decoration:none; transition:color .2s; }
+    footer a:hover { color:#e080e0; }
 
-    /* ── KEYFRAMES ── */
+    /* ════════════════════════════════════
+       KEYFRAMES
+    ════════════════════════════════════ */
     @keyframes ledCycle {
-      0%   { color:#ffb0e0; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff80c0,0 0 55px #ff40a0,0 0 90px #d040ff,0 0 130px rgba(200,40,255,0.4); }
-      25%  { color:#d0c0ff; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #b080ff,0 0 55px #8040ff,0 0 90px #60a0ff,0 0 130px rgba(80,160,255,0.4); }
-      50%  { color:#c0eeff; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #70d0ff,0 0 55px #30b0ff,0 0 90px #ff70d0,0 0 130px rgba(255,80,200,0.4); }
-      75%  { color:#ffc0e8; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff90c0,0 0 55px #ff50b0,0 0 90px #c060ff,0 0 130px rgba(180,60,255,0.4); }
-      100% { color:#ffb0e0; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff80c0,0 0 55px #ff40a0,0 0 90px #d040ff,0 0 130px rgba(200,40,255,0.4); }
+      0%  {color:#ffb0e0;text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff80c0,0 0 55px #ff40a0,0 0 90px #d040ff,0 0 130px rgba(200,40,255,.4)}
+      25% {color:#d0c0ff;text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #b080ff,0 0 55px #8040ff,0 0 90px #60a0ff,0 0 130px rgba(80,160,255,.4)}
+      50% {color:#c0eeff;text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #70d0ff,0 0 55px #30b0ff,0 0 90px #ff70d0,0 0 130px rgba(255,80,200,.4)}
+      75% {color:#ffc0e8;text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff90c0,0 0 55px #ff50b0,0 0 90px #c060ff,0 0 130px rgba(180,60,255,.4)}
+      100%{color:#ffb0e0;text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff80c0,0 0 55px #ff40a0,0 0 90px #d040ff,0 0 130px rgba(200,40,255,.4)}
     }
-
-    /* A — CLARA 3D swing */
     @keyframes swing3d {
-      0%   { transform: perspective(800px) rotateY(-6deg) rotateX(1deg); }
-      25%  { transform: perspective(800px) rotateY(2deg)  rotateX(-1deg); }
-      50%  { transform: perspective(800px) rotateY(6deg)  rotateX(1deg); }
-      75%  { transform: perspective(800px) rotateY(-2deg) rotateX(-1deg); }
-      100% { transform: perspective(800px) rotateY(-6deg) rotateX(1deg); }
+      0%  {transform:perspective(800px) rotateY(-6deg) rotateX(1deg)}
+      25% {transform:perspective(800px) rotateY(2deg) rotateX(-1deg)}
+      50% {transform:perspective(800px) rotateY(6deg) rotateX(1deg)}
+      75% {transform:perspective(800px) rotateY(-2deg) rotateX(-1deg)}
+      100%{transform:perspective(800px) rotateY(-6deg) rotateX(1deg)}
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
+    @keyframes fadeIn  { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
     @keyframes glowPink {
-      0%,100% { filter: drop-shadow(0 0 8px rgba(200,80,200,0.3))  drop-shadow(0 0 20px rgba(180,100,255,0.15)); }
-      50%      { filter: drop-shadow(0 0 18px rgba(200,80,200,0.6)) drop-shadow(0 0 45px rgba(180,100,255,0.35)) drop-shadow(0 0 70px rgba(255,160,220,0.2)); }
+      0%,100%{filter:drop-shadow(0 0 8px rgba(200,80,200,.3)) drop-shadow(0 0 20px rgba(180,100,255,.15))}
+      50%    {filter:drop-shadow(0 0 18px rgba(200,80,200,.6)) drop-shadow(0 0 45px rgba(180,100,255,.35)) drop-shadow(0 0 70px rgba(255,160,220,.2))}
     }
-
-    @keyframes shimmer {
-      0%   { background-position: -200% center; }
-      100% { background-position: 200% center; }
-    }
-
-    @keyframes twinkle {
-      0%,100% { opacity: 0.15; transform: scale(0.8); }
-      50%     { opacity: 0.9;  transform: scale(1.3); }
-    }
-
+    @keyframes shimmer    { 0%{background-position:-200% center} 100%{background-position:200% center} }
+    @keyframes twinkle    { 0%,100%{opacity:.15;transform:scale(.8)} 50%{opacity:.9;transform:scale(1.3)} }
     @keyframes floatCrystal {
-      0%   { transform: translateY(0px)   rotate(0deg)   scale(1);    opacity: 0.5; }
-      33%  { transform: translateY(-20px) rotate(60deg)  scale(1.15); opacity: 0.8; }
-      66%  { transform: translateY(-8px)  rotate(120deg) scale(0.95); opacity: 0.6; }
-      100% { transform: translateY(0px)   rotate(180deg) scale(1);    opacity: 0.5; }
+      0%  {transform:translateY(0) rotate(0deg) scale(1);opacity:.5}
+      33% {transform:translateY(-20px) rotate(60deg) scale(1.15);opacity:.8}
+      66% {transform:translateY(-8px) rotate(120deg) scale(.95);opacity:.6}
+      100%{transform:translateY(0) rotate(180deg) scale(1);opacity:.5}
     }
-
-    @keyframes aurora {
-      0%   { transform: translateX(-10%) skewX(-8deg); opacity: 0.8; }
-      50%  { transform: translateX(5%)   skewX(4deg);  opacity: 1;   }
-      100% { transform: translateX(-10%) skewX(-8deg); opacity: 0.8; }
-    }
-
-    @keyframes aurora2 {
-      0%   { transform: translateX(8%)  skewX(6deg);  opacity: 0.7; }
-      50%  { transform: translateX(-6%) skewX(-5deg); opacity: 1;   }
-      100% { transform: translateX(8%)  skewX(6deg);  opacity: 0.7; }
-    }
-
-    @keyframes bokehFloat {
-      0%   { transform: translateY(0px)   scale(1);   opacity: 0.8; }
-      50%  { transform: translateY(-30px) scale(1.1); opacity: 1;   }
-      100% { transform: translateY(0px)   scale(1);   opacity: 0.8; }
-    }
+    @keyframes aurora  { 0%,100%{transform:translateX(-10%) skewX(-8deg);opacity:.8} 50%{transform:translateX(5%) skewX(4deg);opacity:1} }
+    @keyframes aurora2 { 0%,100%{transform:translateX(8%) skewX(6deg);opacity:.7} 50%{transform:translateX(-6%) skewX(-5deg);opacity:1} }
+    @keyframes bokehFloat { 0%,100%{transform:translateY(0) scale(1);opacity:.8} 50%{transform:translateY(-30px) scale(1.1);opacity:1} }
   </style>
 </head>
 <body>
@@ -375,69 +388,61 @@
 <canvas id="snow-canvas" aria-hidden="true"></canvas>
 
 <div class="aurora" aria-hidden="true">
-  <div class="aurora-band"></div>
-  <div class="aurora-band"></div>
-  <div class="aurora-band"></div>
+  <div class="aurora-band"></div><div class="aurora-band"></div><div class="aurora-band"></div>
 </div>
-
 <div class="bokeh" aria-hidden="true">
   <div class="bok"></div><div class="bok"></div><div class="bok"></div>
   <div class="bok"></div><div class="bok"></div><div class="bok"></div>
 </div>
-
 <div class="crystals" aria-hidden="true">
-  <span class="crystal">❄</span><span class="crystal">❅</span>
-  <span class="crystal">❆</span><span class="crystal">❄</span>
-  <span class="crystal">❅</span><span class="crystal">❆</span>
+  <span class="crystal">❄</span><span class="crystal">❅</span><span class="crystal">❆</span>
+  <span class="crystal">❄</span><span class="crystal">❅</span><span class="crystal">❆</span>
   <span class="crystal">❄</span>
 </div>
-
 <div class="stars" aria-hidden="true">
-  <span class="star">✦</span><span class="star">✧</span>
-  <span class="star">✦</span><span class="star">✧</span>
-  <span class="star">✦</span><span class="star">✧</span>
-  <span class="star">✦</span><span class="star">✧</span>
+  <span class="star">✦</span><span class="star">✧</span><span class="star">✦</span><span class="star">✧</span>
+  <span class="star">✦</span><span class="star">✧</span><span class="star">✦</span><span class="star">✧</span>
 </div>
 
-<!-- C — Mountains split into 3 layers for parallax -->
+<!-- Mountains — 3 layers for parallax -->
 <div class="mountains" aria-hidden="true">
   <div class="mtn-layer" id="mtn-far">
     <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="0,400 0,280 120,180 240,260 380,140 500,220 640,120 760,200 900,100 1020,190 1160,130 1280,210 1440,150 1440,400" fill="rgba(210,185,240,0.35)"/>
-      <polygon points="120,180 90,210 150,210"    fill="rgba(255,240,255,0.7)"/>
-      <polygon points="380,140 345,175 415,175"   fill="rgba(255,240,255,0.75)"/>
-      <polygon points="640,120 600,160 680,160"   fill="rgba(255,240,255,0.8)"/>
-      <polygon points="900,100 858,145 942,145"   fill="rgba(255,240,255,0.75)"/>
-      <polygon points="1160,130 1120,168 1200,168" fill="rgba(255,240,255,0.7)"/>
+      <polygon points="0,400 0,280 120,180 240,260 380,140 500,220 640,120 760,200 900,100 1020,190 1160,130 1280,210 1440,150 1440,400" fill="rgba(210,185,240,.35)"/>
+      <polygon points="120,180 90,210 150,210"   fill="rgba(255,240,255,.7)"/>
+      <polygon points="380,140 345,175 415,175"  fill="rgba(255,240,255,.75)"/>
+      <polygon points="640,120 600,160 680,160"  fill="rgba(255,240,255,.8)"/>
+      <polygon points="900,100 858,145 942,145"  fill="rgba(255,240,255,.75)"/>
+      <polygon points="1160,130 1120,168 1200,168" fill="rgba(255,240,255,.7)"/>
     </svg>
   </div>
   <div class="mtn-layer" id="mtn-mid">
     <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="0,400 0,320 80,240 200,300 320,200 440,280 560,170 680,260 800,180 920,270 1040,160 1160,250 1280,190 1440,270 1440,400" fill="rgba(225,200,250,0.45)"/>
-      <polygon points="320,200 292,228 348,228"   fill="rgba(255,245,255,0.85)"/>
-      <polygon points="560,170 528,202 592,202"   fill="rgba(255,245,255,0.9)"/>
-      <polygon points="800,180 766,214 834,214"   fill="rgba(255,245,255,0.85)"/>
-      <polygon points="1040,160 1004,198 1076,198" fill="rgba(255,245,255,0.9)"/>
+      <polygon points="0,400 0,320 80,240 200,300 320,200 440,280 560,170 680,260 800,180 920,270 1040,160 1160,250 1280,190 1440,270 1440,400" fill="rgba(225,200,250,.45)"/>
+      <polygon points="320,200 292,228 348,228"  fill="rgba(255,245,255,.85)"/>
+      <polygon points="560,170 528,202 592,202"  fill="rgba(255,245,255,.9)"/>
+      <polygon points="800,180 766,214 834,214"  fill="rgba(255,245,255,.85)"/>
+      <polygon points="1040,160 1004,198 1076,198" fill="rgba(255,245,255,.9)"/>
     </svg>
   </div>
   <div class="mtn-layer" id="mtn-near">
     <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="0,400 0,350 100,280 220,340 340,250 460,320 580,220 700,310 820,240 940,330 1060,230 1180,320 1300,260 1440,330 1440,400" fill="rgba(235,210,255,0.55)"/>
-      <polygon points="340,250 316,272 364,272"   fill="rgba(255,250,255,0.95)"/>
-      <polygon points="580,220 552,246 608,246"   fill="rgba(255,250,255,1)"/>
-      <polygon points="820,240 792,266 848,266"   fill="rgba(255,250,255,0.95)"/>
+      <polygon points="0,400 0,350 100,280 220,340 340,250 460,320 580,220 700,310 820,240 940,330 1060,230 1180,320 1300,260 1440,330 1440,400" fill="rgba(235,210,255,.55)"/>
+      <polygon points="340,250 316,272 364,272"  fill="rgba(255,250,255,.95)"/>
+      <polygon points="580,220 552,246 608,246"  fill="rgba(255,250,255,1)"/>
+      <polygon points="820,240 792,266 848,266"  fill="rgba(255,250,255,.95)"/>
       <polygon points="1060,230 1030,260 1090,260" fill="rgba(255,250,255,1)"/>
-      <rect x="0" y="375" width="1440" height="25" fill="rgba(240,220,255,0.5)"/>
-      <rect x="0" y="385" width="1440" height="15" fill="rgba(255,250,255,0.6)"/>
+      <rect x="0" y="375" width="1440" height="25" fill="rgba(240,220,255,.5)"/>
+      <rect x="0" y="385" width="1440" height="15" fill="rgba(255,250,255,.6)"/>
     </svg>
   </div>
 </div>
 
-<div class="page">
+<div class="page-z">
+  <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-subtitle">Joyeux Anniversaire</div>
     <div class="hero-tagline">Là où le ciel oublie de neiger,<br>je me souviens — toujours ❄</div>
-    <!-- A — CLARA wrapped for 3D swing -->
     <div class="hero-name-wrapper">
       <h1 class="hero-name">Clara</h1>
     </div>
@@ -445,13 +450,118 @@
     <div class="hero-hint">❄ &nbsp; CLIQUE PARTOUT POUR DE LA NEIGE &nbsp; ❄</div>
   </section>
 
-  <section class="message-section">
-    <!-- B — Card with 3D tilt + shine -->
-    <div class="message-card" id="msg-card">
-      <div class="card-shine" id="card-shine"></div>
-      <span class="quote-open">"</span>
-      <p class="message-text">Clara tu es la personne la plus merveilleuse que j'ai rencontré de ma vie, tu as toujours été ma meilleure amie et tu le restera pour toujours, je te souhaite un joyeux anniversaire car tu le mérites et encore plus&nbsp;! Je t'aime mon bébékadom et je sais qu'un jour tu te réveillera un bon matin totalement guéri, car Dieu fait toujours des miracles.</p>
-      <span class="quote-close">"</span>
+  <!-- 3D BOOK -->
+  <section class="book-section">
+    <div class="book-section-title">✦ &nbsp; un mot pour toi &nbsp; ✦</div>
+
+    <div class="book-scene">
+      <div class="book" id="book">
+
+        <!-- Static left half background -->
+        <div class="book-left-base" id="left-base"></div>
+
+        <!-- Static right base (last page — closing) -->
+        <div class="book-right-base pf closing" id="right-base">
+          <div class="cover-border"></div>
+          <div class="closing-heart">❤️</div>
+          <div class="pg-deco">❄ ✦ ❄</div>
+          <div class="closing-sig">POUR TOUJOURS</div>
+          <div style="font-size:11px;color:#9050b8;font-style:italic;letter-spacing:1px;margin-top:4px;">
+            Dieu fait toujours des miracles.
+          </div>
+          <div style="margin-top:12px;font-size:24px;color:#d090e0;letter-spacing:8px;">❅ ❆ ❅</div>
+          <div class="closing-link" style="margin-top:auto;">
+            <a href="https://loyal.ac" target="_blank" rel="noopener">loyal.ac</a>
+          </div>
+        </div>
+
+        <!-- PAGE 2 (bottom of stack — revealed last) -->
+        <!-- Front: message part 3 | Back: message part 4 -->
+        <div class="book-page" id="page-2">
+          <div class="pf front">
+            <div class="pg-deco">❅ ✦ ❅</div>
+            <div class="pg-divider"></div>
+            <span class="pg-quote">"</span>
+            <p>
+              et je sais qu'un jour tu te réveillera un bon matin totalement guéri, car Dieu fait toujours des miracles.
+            </p>
+            <div class="pg-snowflakes">❄ ❄ ❄</div>
+            <div class="pg-num">— 4 —</div>
+          </div>
+          <div class="pf back">
+            <div class="pg-deco">❆ ✦ ❆</div>
+            <div class="pg-divider"></div>
+            <p style="text-align:center;font-size:12px;">
+              Je t'aime mon bébékadom<br><br>
+              <span style="font-size:20px;color:#d080e0;">❤️</span>
+            </p>
+            <div class="pg-num">— 5 —</div>
+          </div>
+        </div>
+
+        <!-- PAGE 1 (middle of stack) -->
+        <!-- Front: message part 2 | Back: message part 3 left -->
+        <div class="book-page" id="page-1">
+          <div class="pf front">
+            <div class="pg-deco">❅ ✦ ❅</div>
+            <div class="pg-divider"></div>
+            <span class="pg-quote">"</span>
+            <p>
+              tu as toujours été ma meilleure amie et tu le restera pour toujours, je te souhaite un joyeux anniversaire car tu le mérites et encore plus&nbsp;!
+            </p>
+            <div class="pg-num">— 2 —</div>
+          </div>
+          <div class="pf back">
+            <div class="pg-deco">❄ ✦ ❄</div>
+            <div class="pg-divider"></div>
+            <p>
+              Je t'aime mon bébékadom et je sais qu'un jour tu te réveillera un bon matin totalement guéri,
+            </p>
+            <div class="pg-snowflakes">❅ ❆ ❅</div>
+            <div class="pg-num">— 3 —</div>
+          </div>
+        </div>
+
+        <!-- PAGE 0 (top of stack — cover + first text) -->
+        <!-- Front: cover | Back: decorative opening left -->
+        <div class="book-page" id="page-0">
+          <div class="pf front cover-front">
+            <div class="cover-border"></div>
+            <div class="cover-ornament">❄ ✦ ❄</div>
+            <div class="cover-name">Clara</div>
+            <div class="cover-subtitle">un message du cœur</div>
+            <div class="cover-year">✦ &nbsp; 2026 &nbsp; ✦</div>
+            <div style="font-size:11px;color:#b070c8;margin-top:6px;letter-spacing:1px;font-style:italic;">
+              clique pour ouvrir →
+            </div>
+          </div>
+          <div class="pf back deco-left">
+            <div style="font-size:28px;color:#d090e0;letter-spacing:6px;">❄ ✦ ❄</div>
+            <div style="width:40px;height:1px;background:linear-gradient(90deg,transparent,#d080e0,transparent);margin:0 auto;"></div>
+            <p style="text-align:center;font-size:12px;color:#9050b8;letter-spacing:1px;line-height:1.8;font-style:italic;">
+              Chère Clara,<br><br>
+              voici quelques mots<br>écrits du fond du cœur<br>juste pour toi…
+            </p>
+            <div style="font-size:20px;color:#e0a0d8;">✦</div>
+          </div>
+        </div>
+
+        <!-- Right side: first text (visible after cover flip) -->
+        <!-- This is actually part of page-0's reveal — handled by page-1 front initially hidden -->
+
+        <!-- Spine -->
+        <div class="book-spine"></div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="book-nav">
+      <button class="book-btn" id="btn-prev" disabled>‹</button>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div class="book-indicator" id="book-indicator">Couverture</div>
+        <div class="book-hint">← → pour tourner les pages</div>
+      </div>
+      <button class="book-btn" id="btn-next">›</button>
     </div>
   </section>
 
@@ -462,156 +572,150 @@
 
 <script>
 (function () {
+  /* ══════════════════════════════
+     SNOW + EFFECTS
+  ══════════════════════════════ */
   const canvas = document.getElementById('snow-canvas');
-  const ctx = canvas.getContext('2d');
+  const ctx    = canvas.getContext('2d');
   let W = window.innerWidth, H = window.innerHeight;
   canvas.width = W; canvas.height = H;
-  window.addEventListener('resize', () => {
-    W = window.innerWidth; H = window.innerHeight;
-    canvas.width = W; canvas.height = H;
-  });
+  window.addEventListener('resize', () => { W = window.innerWidth; H = window.innerHeight; canvas.width = W; canvas.height = H; });
 
-  /* ── Flake colours ── */
-  const flakeColors = [
-    [200,160,230],[220,170,240],[240,180,220],[210,190,255],[255,200,235]
-  ];
+  const flakeColors = [[200,160,230],[220,170,240],[240,180,220],[210,190,255],[255,200,235]];
 
   class Flake {
-    constructor(x, y, isBurst) { this.reset(x, y, isBurst); }
-    reset(x, y, isBurst = false) {
-      this.x = x !== undefined ? x : Math.random() * W;
-      this.y = y !== undefined ? y : Math.random() * -H;
-      this.r = isBurst ? Math.random() * 4 + 1 : Math.random() * 3 + 0.5;
-      this.speed  = isBurst ? Math.random() * 4 + 1   : Math.random() * 1.2 + 0.3;
-      this.wind   = isBurst ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.6;
-      this.opacity = isBurst ? Math.random() * 0.8 + 0.2 : Math.random() * 0.55 + 0.15;
-      this.color  = flakeColors[Math.floor(Math.random() * flakeColors.length)];
-      this.isBurst = isBurst;
-      this.life   = isBurst ? Math.random() * 80 + 40 : Infinity;
-      this.age    = 0;
+    constructor(x,y,b){this.reset(x,y,b)}
+    reset(x,y,b=false){
+      this.x=x!==undefined?x:Math.random()*W; this.y=y!==undefined?y:Math.random()*-H;
+      this.r=b?Math.random()*4+1:Math.random()*3+.5;
+      this.speed=b?Math.random()*4+1:Math.random()*1.2+.3;
+      this.wind=b?(Math.random()-.5)*8:(Math.random()-.5)*.6;
+      this.opacity=b?Math.random()*.8+.2:Math.random()*.55+.15;
+      this.color=flakeColors[Math.floor(Math.random()*flakeColors.length)];
+      this.isBurst=b; this.life=b?Math.random()*80+40:Infinity; this.age=0;
     }
-    update() {
-      this.x += this.wind; this.y += this.speed; this.age++;
-      if (this.isBurst) { this.opacity = Math.max(0, this.opacity - 0.014); this.speed += 0.07; }
-    }
-    draw() {
-      const [r,g,b] = this.color;
-      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r},${g},${b},${this.opacity})`; ctx.fill();
-    }
-    isDead() { return this.y > H + 10 || this.age > this.life || this.opacity <= 0; }
+    update(){this.x+=this.wind;this.y+=this.speed;this.age++;if(this.isBurst){this.opacity=Math.max(0,this.opacity-.014);this.speed+=.07;}}
+    draw(){const[r,g,b]=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(${r},${g},${b},${this.opacity})`;ctx.fill();}
+    isDead(){return this.y>H+10||this.age>this.life||this.opacity<=0;}
   }
-
   class Spark {
-    constructor(x, y) {
-      this.x = x; this.y = y;
-      this.vx = (Math.random() - 0.5) * 6;
-      this.vy = (Math.random() - 0.5) * 6 - 1;
-      this.opacity = 1;
-      this.size = Math.random() * 6 + 4;
-      this.rotation = Math.random() * Math.PI * 2;
-      this.spin = (Math.random() - 0.5) * 0.2;
-      this.hue = Math.random() * 60 + 300;
-    }
-    update() {
-      this.x += this.vx; this.y += this.vy; this.vy += 0.12;
-      this.opacity -= 0.022; this.rotation += this.spin;
-    }
-    draw() {
-      ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
-      ctx.globalAlpha = Math.max(0, this.opacity);
-      ctx.fillStyle = `hsl(${this.hue}, 90%, 70%)`;
-      const s = this.size; ctx.beginPath();
-      for (let i = 0; i < 4; i++) { ctx.rotate(Math.PI / 2); ctx.lineTo(0, -s); ctx.lineTo(s * 0.35, -s * 0.35); }
-      ctx.closePath(); ctx.fill(); ctx.restore();
-    }
-    isDead() { return this.opacity <= 0; }
+    constructor(x,y){this.x=x;this.y=y;this.vx=(Math.random()-.5)*6;this.vy=(Math.random()-.5)*6-1;this.opacity=1;this.size=Math.random()*6+4;this.rotation=Math.random()*Math.PI*2;this.spin=(Math.random()-.5)*.2;this.hue=Math.random()*60+300;}
+    update(){this.x+=this.vx;this.y+=this.vy;this.vy+=.12;this.opacity-=.022;this.rotation+=this.spin;}
+    draw(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.rotation);ctx.globalAlpha=Math.max(0,this.opacity);ctx.fillStyle=`hsl(${this.hue},90%,70%)`;const s=this.size;ctx.beginPath();for(let i=0;i<4;i++){ctx.rotate(Math.PI/2);ctx.lineTo(0,-s);ctx.lineTo(s*.35,-s*.35);}ctx.closePath();ctx.fill();ctx.restore();}
+    isDead(){return this.opacity<=0;}
   }
 
-  const flakes  = Array.from({ length: 150 }, () => new Flake());
-  const ripples = [];
-  const sparks  = [];
+  const flakes=[...Array(150)].map(()=>new Flake());
+  const ripples=[], sparks=[];
 
-  function spawnRipple(x, y) {
-    ripples.push({ x, y, r: 0, maxR: 90 + Math.random()*60,  opacity: 0.6, speed: 2.5 + Math.random()*1.5, hue: Math.random()*60+280 });
-    ripples.push({ x, y, r: 0, maxR: 55 + Math.random()*30,  opacity: 0.4, speed: 3.5 + Math.random(),     hue: Math.random()*60+300 });
+  function spawnRipple(x,y){
+    ripples.push({x,y,r:0,maxR:90+Math.random()*60,opacity:.6,speed:2.5+Math.random()*1.5,hue:Math.random()*60+280});
+    ripples.push({x,y,r:0,maxR:55+Math.random()*30,opacity:.4,speed:3.5+Math.random(),hue:Math.random()*60+300});
   }
 
-  function animate() {
-    ctx.clearRect(0, 0, W, H);
-    for (let i = flakes.length - 1; i >= 0; i--) {
-      const f = flakes[i]; f.update(); f.draw();
-      if (f.isDead()) { f.isBurst ? flakes.splice(i, 1) : f.reset(); }
-    }
-    for (let i = ripples.length - 1; i >= 0; i--) {
-      const rp = ripples[i]; rp.r += rp.speed; rp.opacity -= 0.013;
-      if (rp.opacity <= 0 || rp.r > rp.maxR) { ripples.splice(i, 1); continue; }
-      ctx.beginPath(); ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
-      ctx.strokeStyle = `hsla(${rp.hue},80%,70%,${rp.opacity})`; ctx.lineWidth = 1.5; ctx.stroke();
-    }
-    for (let i = sparks.length - 1; i >= 0; i--) {
-      sparks[i].update(); sparks[i].draw();
-      if (sparks[i].isDead()) sparks.splice(i, 1);
-    }
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=flakes.length-1;i>=0;i--){const f=flakes[i];f.update();f.draw();if(f.isDead()){f.isBurst?flakes.splice(i,1):f.reset();}}
+    for(let i=ripples.length-1;i>=0;i--){const rp=ripples[i];rp.r+=rp.speed;rp.opacity-=.013;if(rp.opacity<=0||rp.r>rp.maxR){ripples.splice(i,1);continue;}ctx.beginPath();ctx.arc(rp.x,rp.y,rp.r,0,Math.PI*2);ctx.strokeStyle=`hsla(${rp.hue},80%,70%,${rp.opacity})`;ctx.lineWidth=1.5;ctx.stroke();}
+    for(let i=sparks.length-1;i>=0;i--){sparks[i].update();sparks[i].draw();if(sparks[i].isDead())sparks.splice(i,1);}
     requestAnimationFrame(animate);
   }
   animate();
 
-  document.addEventListener('click', (e) => {
-    for (let i = 0; i < 28; i++) flakes.push(new Flake(e.clientX, e.clientY, true));
-    spawnRipple(e.clientX, e.clientY);
-    for (let i = 0; i < 18; i++) sparks.push(new Spark(e.clientX, e.clientY));
+  document.addEventListener('click',(e)=>{
+    if(e.target.closest('.book-scene')||e.target.closest('.book-nav'))return;
+    for(let i=0;i<28;i++)flakes.push(new Flake(e.clientX,e.clientY,true));
+    spawnRipple(e.clientX,e.clientY);
+    for(let i=0;i<18;i++)sparks.push(new Spark(e.clientX,e.clientY));
   });
 
-  /* ── B — Message card 3D tilt ── */
-  const card  = document.getElementById('msg-card');
-  const shine = document.getElementById('card-shine');
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width  - 0.5; // -0.5 → 0.5
-    const y = (e.clientY - rect.top)  / rect.height - 0.5;
-    card.style.transform  = `perspective(900px) rotateY(${x*14}deg) rotateX(${-y*10}deg) translateZ(12px)`;
-    card.style.boxShadow  = `${-x*20}px ${-y*15}px 50px rgba(180,100,220,0.18), 0 2px 12px rgba(200,150,255,0.1)`;
-    shine.style.background = `radial-gradient(circle at ${(x+0.5)*100}% ${(y+0.5)*100}%, rgba(255,255,255,0.22) 0%, transparent 65%)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transition  = 'transform 0.6s ease, box-shadow 0.6s ease';
-    card.style.transform   = '';
-    card.style.boxShadow   = '';
-    shine.style.background = 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18) 0%, transparent 65%)';
-    setTimeout(() => { card.style.transition = 'transform 0.1s ease-out, box-shadow 0.1s ease-out'; }, 600);
-  });
-
-  /* ── C — Mountains parallax + D — Hero gyro ── */
-  const hero   = document.getElementById('hero');
-  const mtnFar  = document.getElementById('mtn-far');
-  const mtnMid  = document.getElementById('mtn-mid');
-  const mtnNear = document.getElementById('mtn-near');
-
-  let mx = 0, my = 0; // smoothed mouse position (-0.5 → 0.5)
-  let tx = 0, ty = 0; // raw target
-
-  document.addEventListener('mousemove', (e) => {
-    tx = e.clientX / W - 0.5;
-    ty = e.clientY / H - 0.5;
-  });
-
-  function update3D() {
-    // Lerp for smooth follow
-    mx += (tx - mx) * 0.06;
-    my += (ty - my) * 0.06;
-
-    // C — Mountains parallax (different depth per layer)
-    mtnFar.style.transform  = `translateX(${mx * 18}px)`;
-    mtnMid.style.transform  = `translateX(${mx * 36}px)`;
-    mtnNear.style.transform = `translateX(${mx * 60}px) translateY(${my * 8}px)`;
-
-    // D — Hero gyroscopic tilt
-    hero.style.transform = `perspective(1400px) rotateY(${mx * 4}deg) rotateX(${-my * 3}deg)`;
-
+  /* ══════════════════════════════
+     MOUSE 3D (mountains + hero)
+  ══════════════════════════════ */
+  const hero=document.getElementById('hero');
+  const mtnFar=document.getElementById('mtn-far');
+  const mtnMid=document.getElementById('mtn-mid');
+  const mtnNear=document.getElementById('mtn-near');
+  let mx=0,my=0,tx=0,ty=0;
+  document.addEventListener('mousemove',(e)=>{tx=e.clientX/W-.5;ty=e.clientY/H-.5;});
+  (function update3D(){
+    mx+=(tx-mx)*.06; my+=(ty-my)*.06;
+    mtnFar.style.transform=`translateX(${mx*18}px)`;
+    mtnMid.style.transform=`translateX(${mx*36}px)`;
+    mtnNear.style.transform=`translateX(${mx*60}px) translateY(${my*8}px)`;
+    hero.style.transform=`perspective(1400px) rotateY(${mx*4}deg) rotateX(${-my*3}deg)`;
     requestAnimationFrame(update3D);
+  })();
+
+  /* ══════════════════════════════
+     3D BOOK ENGINE
+  ══════════════════════════════ */
+  const pages    = [document.getElementById('page-0'), document.getElementById('page-1'), document.getElementById('page-2')];
+  const btnPrev  = document.getElementById('btn-prev');
+  const btnNext  = document.getElementById('btn-next');
+  const indicator= document.getElementById('book-indicator');
+
+  const labels = ['Couverture', 'Page 1 — 2', 'Page 3 — 4', 'Page 5 — 6'];
+  let current  = 0; // 0 = closed, 1 = after cover flip, 2 = ..., 3 = fully open
+  const total  = 3; // number of flippable pages
+  let animating = false;
+
+  /* Initial z-index: page-0 on top */
+  function setInitialZ(){
+    pages.forEach((p,i)=>{ p.style.zIndex = String(total - i); });
   }
-  update3D();
+  setInitialZ();
+
+  function updateNav(){
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === total;
+    indicator.textContent = labels[current] || `Page ${current}`;
+  }
+  updateNav();
+
+  function flipForward(){
+    if(animating || current >= total) return;
+    animating = true;
+    const page = pages[current];
+    page.style.zIndex = '20';
+    page.classList.add('flipping');
+    page.classList.add('flipped');
+    setTimeout(()=>{
+      page.classList.remove('flipping');
+      page.style.zIndex = String(current + 1); // flipped pages stack ascending
+      current++;
+      updateNav();
+      animating = false;
+    }, 1350);
+  }
+
+  function flipBackward(){
+    if(animating || current <= 0) return;
+    animating = true;
+    const page = pages[current - 1];
+    page.style.zIndex = '20';
+    page.classList.add('flipping');
+    page.classList.remove('flipped');
+    setTimeout(()=>{
+      page.classList.remove('flipping');
+      page.style.zIndex = String(total - (current - 1)); // restore original z
+      current--;
+      updateNav();
+      animating = false;
+    }, 1350);
+  }
+
+  btnNext.addEventListener('click', flipForward);
+  btnPrev.addEventListener('click', flipBackward);
+
+  /* Keyboard support */
+  document.addEventListener('keydown',(e)=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') flipForward();
+    if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   flipBackward();
+  });
+
+  /* Click on book cover also flips */
+  pages[0].querySelector('.front').addEventListener('click', flipForward);
 
 })();
 </script>
