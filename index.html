@@ -50,12 +50,13 @@
     }
 
     .hero-subtitle {
-      font-size: clamp(10px, 2vw, 13px);
-      letter-spacing: 6px;
-      color: #c060d0;
+      font-size: clamp(24px, 5.5vw, 58px);
+      letter-spacing: clamp(3px, 1.2vw, 10px);
       font-weight: 300;
+      text-transform: uppercase;
+      color: #ffb0e0;
       opacity: 0;
-      animation: fadeIn 1.2s ease forwards 0.3s;
+      animation: fadeIn 1.2s ease forwards 0.3s, ledCycle 3s linear infinite 1.5s;
     }
 
     .hero-tagline {
@@ -276,6 +277,59 @@
     footer a:hover { color: #e080e0; }
 
     /* ── KEYFRAMES ── */
+    @keyframes ledCycle {
+      0%   {
+        color: #ffb0e0;
+        text-shadow:
+          0 0 4px #fff,
+          0 0 12px #fff,
+          0 0 28px #ff80c0,
+          0 0 55px #ff40a0,
+          0 0 90px #d040ff,
+          0 0 130px rgba(200,40,255,0.4);
+      }
+      25%  {
+        color: #d0c0ff;
+        text-shadow:
+          0 0 4px #fff,
+          0 0 12px #fff,
+          0 0 28px #b080ff,
+          0 0 55px #8040ff,
+          0 0 90px #60a0ff,
+          0 0 130px rgba(80,160,255,0.4);
+      }
+      50%  {
+        color: #c0eeff;
+        text-shadow:
+          0 0 4px #fff,
+          0 0 12px #fff,
+          0 0 28px #70d0ff,
+          0 0 55px #30b0ff,
+          0 0 90px #ff70d0,
+          0 0 130px rgba(255,80,200,0.4);
+      }
+      75%  {
+        color: #ffc0e8;
+        text-shadow:
+          0 0 4px #fff,
+          0 0 12px #fff,
+          0 0 28px #ff90c0,
+          0 0 55px #ff50b0,
+          0 0 90px #c060ff,
+          0 0 130px rgba(180,60,255,0.4);
+      }
+      100% {
+        color: #ffb0e0;
+        text-shadow:
+          0 0 4px #fff,
+          0 0 12px #fff,
+          0 0 28px #ff80c0,
+          0 0 55px #ff40a0,
+          0 0 90px #d040ff,
+          0 0 130px rgba(200,40,255,0.4);
+      }
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -394,7 +448,7 @@
 
 <div class="page">
   <section class="hero">
-    <div class="hero-subtitle">✦ &nbsp; JOYEUX ANNIVERSAIRE &nbsp; ✦</div>
+    <div class="hero-subtitle">Joyeux Anniversaire</div>
     <div class="hero-tagline">Là où le ciel oublie de neiger,<br>je me souviens — toujours ❄</div>
     <h1 class="hero-name">Clara</h1>
     <div class="hero-divider"></div>
