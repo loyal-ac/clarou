@@ -47,6 +47,9 @@
       text-align: center;
       padding: 40px 20px 30vh;
       gap: 16px;
+      transform-style: preserve-3d;
+      transition: transform 0.08s ease-out;
+      will-change: transform;
     }
 
     .hero-subtitle {
@@ -71,12 +74,19 @@
       animation: fadeIn 1.2s ease forwards 1.5s;
     }
 
+    /* 3D wrapper for CLARA */
+    .hero-name-wrapper {
+      animation: swing3d 7s ease-in-out infinite 2.5s;
+      transform-style: preserve-3d;
+    }
+
     .hero-name {
       font-size: clamp(56px, 18vw, 140px);
       font-weight: 200;
       letter-spacing: clamp(8px, 3vw, 24px);
       text-transform: uppercase;
       opacity: 0;
+      display: block;
       background: linear-gradient(90deg,
         #d060c0 0%, #d060c0 30%,
         #f0a0e0 42%, #ffffff 50%, #b090ff 58%,
@@ -104,7 +114,38 @@
       animation: fadeIn 1s ease forwards 1.8s;
     }
 
-    /* ── BOKEH CIRCLES ── */
+    /* ── AURORA ── */
+    .aurora {
+      position: fixed;
+      top: 0; left: -20%;
+      width: 140%; height: 60vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .aurora-band {
+      position: absolute;
+      left: 0; width: 100%;
+      border-radius: 50%;
+      filter: blur(45px);
+    }
+    .aurora-band:nth-child(1) {
+      top: -5%; height: 45%;
+      background: linear-gradient(180deg, transparent 0%, rgba(255,160,220,0.25) 50%, transparent 100%);
+      animation: aurora 9s ease-in-out infinite;
+    }
+    .aurora-band:nth-child(2) {
+      top: 8%; height: 40%;
+      background: linear-gradient(180deg, transparent 0%, rgba(200,150,255,0.2) 50%, transparent 100%);
+      animation: aurora2 12s ease-in-out infinite;
+    }
+    .aurora-band:nth-child(3) {
+      top: 18%; height: 35%;
+      background: linear-gradient(180deg, transparent 0%, rgba(150,210,255,0.15) 50%, transparent 100%);
+      animation: aurora 15s ease-in-out infinite 2s;
+    }
+
+    /* ── BOKEH ── */
     .bokeh {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -166,38 +207,7 @@
     .crystal:nth-child(6) { top:80%; left:15%; font-size:22px; color:#b060e0; animation-duration:10s;  animation-delay:1.5s; }
     .crystal:nth-child(7) { top:55%; left:82%; font-size:13px; color:#d090f0; animation-duration:6.5s; animation-delay:4s; }
 
-    /* ── AURORA ── */
-    .aurora {
-      position: fixed;
-      top: 0; left: -20%;
-      width: 140%; height: 60vh;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .aurora-band {
-      position: absolute;
-      left: 0; width: 100%;
-      border-radius: 50%;
-      filter: blur(45px);
-    }
-    .aurora-band:nth-child(1) {
-      top: -5%; height: 45%;
-      background: linear-gradient(180deg, transparent 0%, rgba(255,160,220,0.25) 50%, transparent 100%);
-      animation: aurora 9s ease-in-out infinite;
-    }
-    .aurora-band:nth-child(2) {
-      top: 8%; height: 40%;
-      background: linear-gradient(180deg, transparent 0%, rgba(200,150,255,0.2) 50%, transparent 100%);
-      animation: aurora2 12s ease-in-out infinite;
-    }
-    .aurora-band:nth-child(3) {
-      top: 18%; height: 35%;
-      background: linear-gradient(180deg, transparent 0%, rgba(150,210,255,0.15) 50%, transparent 100%);
-      animation: aurora 15s ease-in-out infinite 2s;
-    }
-
-    /* ── MOUNTAINS ── */
+    /* ── MOUNTAINS (3 layers for parallax) ── */
     .mountains {
       position: fixed;
       bottom: 0; left: 0;
@@ -205,9 +215,17 @@
       z-index: 0;
       pointer-events: none;
     }
-    .mountains svg {
+    .mtn-layer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      will-change: transform;
+      transition: transform 0.12s ease-out;
+    }
+    .mtn-layer svg {
       width: 100%; height: 100%;
       display: block;
+      overflow: visible;
     }
 
     /* ── MESSAGE ── */
@@ -225,9 +243,21 @@
       border-radius: 20px;
       padding: 40px 44px;
       backdrop-filter: blur(12px);
-      box-shadow: 0 8px 40px rgba(180, 100, 220, 0.1), 0 2px 12px rgba(200, 150, 255, 0.08);
+      box-shadow: 0 8px 40px rgba(180,100,220,0.1), 0 2px 12px rgba(200,150,255,0.08);
       opacity: 0;
       animation: fadeIn 1.2s ease forwards 2.4s;
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .message-card .card-shine {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18) 0%, transparent 65%);
+      transition: background 0.1s ease-out;
     }
 
     .quote-open {
@@ -278,56 +308,20 @@
 
     /* ── KEYFRAMES ── */
     @keyframes ledCycle {
-      0%   {
-        color: #ffb0e0;
-        text-shadow:
-          0 0 4px #fff,
-          0 0 12px #fff,
-          0 0 28px #ff80c0,
-          0 0 55px #ff40a0,
-          0 0 90px #d040ff,
-          0 0 130px rgba(200,40,255,0.4);
-      }
-      25%  {
-        color: #d0c0ff;
-        text-shadow:
-          0 0 4px #fff,
-          0 0 12px #fff,
-          0 0 28px #b080ff,
-          0 0 55px #8040ff,
-          0 0 90px #60a0ff,
-          0 0 130px rgba(80,160,255,0.4);
-      }
-      50%  {
-        color: #c0eeff;
-        text-shadow:
-          0 0 4px #fff,
-          0 0 12px #fff,
-          0 0 28px #70d0ff,
-          0 0 55px #30b0ff,
-          0 0 90px #ff70d0,
-          0 0 130px rgba(255,80,200,0.4);
-      }
-      75%  {
-        color: #ffc0e8;
-        text-shadow:
-          0 0 4px #fff,
-          0 0 12px #fff,
-          0 0 28px #ff90c0,
-          0 0 55px #ff50b0,
-          0 0 90px #c060ff,
-          0 0 130px rgba(180,60,255,0.4);
-      }
-      100% {
-        color: #ffb0e0;
-        text-shadow:
-          0 0 4px #fff,
-          0 0 12px #fff,
-          0 0 28px #ff80c0,
-          0 0 55px #ff40a0,
-          0 0 90px #d040ff,
-          0 0 130px rgba(200,40,255,0.4);
-      }
+      0%   { color:#ffb0e0; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff80c0,0 0 55px #ff40a0,0 0 90px #d040ff,0 0 130px rgba(200,40,255,0.4); }
+      25%  { color:#d0c0ff; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #b080ff,0 0 55px #8040ff,0 0 90px #60a0ff,0 0 130px rgba(80,160,255,0.4); }
+      50%  { color:#c0eeff; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #70d0ff,0 0 55px #30b0ff,0 0 90px #ff70d0,0 0 130px rgba(255,80,200,0.4); }
+      75%  { color:#ffc0e8; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff90c0,0 0 55px #ff50b0,0 0 90px #c060ff,0 0 130px rgba(180,60,255,0.4); }
+      100% { color:#ffb0e0; text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 28px #ff80c0,0 0 55px #ff40a0,0 0 90px #d040ff,0 0 130px rgba(200,40,255,0.4); }
+    }
+
+    /* A — CLARA 3D swing */
+    @keyframes swing3d {
+      0%   { transform: perspective(800px) rotateY(-6deg) rotateX(1deg); }
+      25%  { transform: perspective(800px) rotateY(2deg)  rotateX(-1deg); }
+      50%  { transform: perspective(800px) rotateY(6deg)  rotateX(1deg); }
+      75%  { transform: perspective(800px) rotateY(-2deg) rotateX(-1deg); }
+      100% { transform: perspective(800px) rotateY(-6deg) rotateX(1deg); }
     }
 
     @keyframes fadeIn {
@@ -336,8 +330,8 @@
     }
 
     @keyframes glowPink {
-      0%, 100% { filter: drop-shadow(0 0 8px rgba(200,80,200,0.3))  drop-shadow(0 0 20px rgba(180,100,255,0.15)); }
-      50%       { filter: drop-shadow(0 0 18px rgba(200,80,200,0.6)) drop-shadow(0 0 45px rgba(180,100,255,0.35)) drop-shadow(0 0 70px rgba(255,160,220,0.2)); }
+      0%,100% { filter: drop-shadow(0 0 8px rgba(200,80,200,0.3))  drop-shadow(0 0 20px rgba(180,100,255,0.15)); }
+      50%      { filter: drop-shadow(0 0 18px rgba(200,80,200,0.6)) drop-shadow(0 0 45px rgba(180,100,255,0.35)) drop-shadow(0 0 70px rgba(255,160,220,0.2)); }
     }
 
     @keyframes shimmer {
@@ -346,8 +340,8 @@
     }
 
     @keyframes twinkle {
-      0%, 100% { opacity: 0.15; transform: scale(0.8); }
-      50%       { opacity: 0.9;  transform: scale(1.3); }
+      0%,100% { opacity: 0.15; transform: scale(0.8); }
+      50%     { opacity: 0.9;  transform: scale(1.3); }
     }
 
     @keyframes floatCrystal {
@@ -370,9 +364,9 @@
     }
 
     @keyframes bokehFloat {
-      0%   { transform: translateY(0px)   scale(1);    opacity: 0.8; }
-      50%  { transform: translateY(-30px) scale(1.1);  opacity: 1;   }
-      100% { transform: translateY(0px)   scale(1);    opacity: 0.8; }
+      0%   { transform: translateY(0px)   scale(1);   opacity: 0.8; }
+      50%  { transform: translateY(-30px) scale(1.1); opacity: 1;   }
+      100% { transform: translateY(0px)   scale(1);   opacity: 0.8; }
     }
   </style>
 </head>
@@ -387,76 +381,74 @@
 </div>
 
 <div class="bokeh" aria-hidden="true">
-  <div class="bok"></div>
-  <div class="bok"></div>
-  <div class="bok"></div>
-  <div class="bok"></div>
-  <div class="bok"></div>
-  <div class="bok"></div>
+  <div class="bok"></div><div class="bok"></div><div class="bok"></div>
+  <div class="bok"></div><div class="bok"></div><div class="bok"></div>
 </div>
 
 <div class="crystals" aria-hidden="true">
-  <span class="crystal">❄</span>
-  <span class="crystal">❅</span>
-  <span class="crystal">❆</span>
-  <span class="crystal">❄</span>
-  <span class="crystal">❅</span>
-  <span class="crystal">❆</span>
+  <span class="crystal">❄</span><span class="crystal">❅</span>
+  <span class="crystal">❆</span><span class="crystal">❄</span>
+  <span class="crystal">❅</span><span class="crystal">❆</span>
   <span class="crystal">❄</span>
 </div>
 
 <div class="stars" aria-hidden="true">
-  <span class="star">✦</span>
-  <span class="star">✧</span>
-  <span class="star">✦</span>
-  <span class="star">✧</span>
-  <span class="star">✦</span>
-  <span class="star">✧</span>
-  <span class="star">✦</span>
-  <span class="star">✧</span>
+  <span class="star">✦</span><span class="star">✧</span>
+  <span class="star">✦</span><span class="star">✧</span>
+  <span class="star">✦</span><span class="star">✧</span>
+  <span class="star">✦</span><span class="star">✧</span>
 </div>
 
+<!-- C — Mountains split into 3 layers for parallax -->
 <div class="mountains" aria-hidden="true">
-  <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Far mountains -->
-    <polygon points="0,400 0,280 120,180 240,260 380,140 500,220 640,120 760,200 900,100 1020,190 1160,130 1280,210 1440,150 1440,400" fill="rgba(210,185,240,0.35)"/>
-    <!-- Far snow caps -->
-    <polygon points="120,180 90,210 150,210"   fill="rgba(255,240,255,0.7)"/>
-    <polygon points="380,140 345,175 415,175"  fill="rgba(255,240,255,0.75)"/>
-    <polygon points="640,120 600,160 680,160"  fill="rgba(255,240,255,0.8)"/>
-    <polygon points="900,100 858,145 942,145"  fill="rgba(255,240,255,0.75)"/>
-    <polygon points="1160,130 1120,168 1200,168" fill="rgba(255,240,255,0.7)"/>
-    <!-- Mid mountains -->
-    <polygon points="0,400 0,320 80,240 200,300 320,200 440,280 560,170 680,260 800,180 920,270 1040,160 1160,250 1280,190 1440,270 1440,400" fill="rgba(225,200,250,0.45)"/>
-    <!-- Mid snow caps -->
-    <polygon points="320,200 292,228 348,228"  fill="rgba(255,245,255,0.85)"/>
-    <polygon points="560,170 528,202 592,202"  fill="rgba(255,245,255,0.9)"/>
-    <polygon points="800,180 766,214 834,214"  fill="rgba(255,245,255,0.85)"/>
-    <polygon points="1040,160 1004,198 1076,198" fill="rgba(255,245,255,0.9)"/>
-    <!-- Near mountains -->
-    <polygon points="0,400 0,350 100,280 220,340 340,250 460,320 580,220 700,310 820,240 940,330 1060,230 1180,320 1300,260 1440,330 1440,400" fill="rgba(235,210,255,0.55)"/>
-    <!-- Near snow caps -->
-    <polygon points="340,250 316,272 364,272"  fill="rgba(255,250,255,0.95)"/>
-    <polygon points="580,220 552,246 608,246"  fill="rgba(255,250,255,1)"/>
-    <polygon points="820,240 792,266 848,266"  fill="rgba(255,250,255,0.95)"/>
-    <polygon points="1060,230 1030,260 1090,260" fill="rgba(255,250,255,1)"/>
-    <!-- Snow ground -->
-    <rect x="0" y="375" width="1440" height="25" fill="rgba(240,220,255,0.5)"/>
-    <rect x="0" y="385" width="1440" height="15" fill="rgba(255,250,255,0.6)"/>
-  </svg>
+  <div class="mtn-layer" id="mtn-far">
+    <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,400 0,280 120,180 240,260 380,140 500,220 640,120 760,200 900,100 1020,190 1160,130 1280,210 1440,150 1440,400" fill="rgba(210,185,240,0.35)"/>
+      <polygon points="120,180 90,210 150,210"    fill="rgba(255,240,255,0.7)"/>
+      <polygon points="380,140 345,175 415,175"   fill="rgba(255,240,255,0.75)"/>
+      <polygon points="640,120 600,160 680,160"   fill="rgba(255,240,255,0.8)"/>
+      <polygon points="900,100 858,145 942,145"   fill="rgba(255,240,255,0.75)"/>
+      <polygon points="1160,130 1120,168 1200,168" fill="rgba(255,240,255,0.7)"/>
+    </svg>
+  </div>
+  <div class="mtn-layer" id="mtn-mid">
+    <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,400 0,320 80,240 200,300 320,200 440,280 560,170 680,260 800,180 920,270 1040,160 1160,250 1280,190 1440,270 1440,400" fill="rgba(225,200,250,0.45)"/>
+      <polygon points="320,200 292,228 348,228"   fill="rgba(255,245,255,0.85)"/>
+      <polygon points="560,170 528,202 592,202"   fill="rgba(255,245,255,0.9)"/>
+      <polygon points="800,180 766,214 834,214"   fill="rgba(255,245,255,0.85)"/>
+      <polygon points="1040,160 1004,198 1076,198" fill="rgba(255,245,255,0.9)"/>
+    </svg>
+  </div>
+  <div class="mtn-layer" id="mtn-near">
+    <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,400 0,350 100,280 220,340 340,250 460,320 580,220 700,310 820,240 940,330 1060,230 1180,320 1300,260 1440,330 1440,400" fill="rgba(235,210,255,0.55)"/>
+      <polygon points="340,250 316,272 364,272"   fill="rgba(255,250,255,0.95)"/>
+      <polygon points="580,220 552,246 608,246"   fill="rgba(255,250,255,1)"/>
+      <polygon points="820,240 792,266 848,266"   fill="rgba(255,250,255,0.95)"/>
+      <polygon points="1060,230 1030,260 1090,260" fill="rgba(255,250,255,1)"/>
+      <rect x="0" y="375" width="1440" height="25" fill="rgba(240,220,255,0.5)"/>
+      <rect x="0" y="385" width="1440" height="15" fill="rgba(255,250,255,0.6)"/>
+    </svg>
+  </div>
 </div>
 
 <div class="page">
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero-subtitle">Joyeux Anniversaire</div>
     <div class="hero-tagline">Là où le ciel oublie de neiger,<br>je me souviens — toujours ❄</div>
-    <h1 class="hero-name">Clara</h1>
+    <!-- A — CLARA wrapped for 3D swing -->
+    <div class="hero-name-wrapper">
+      <h1 class="hero-name">Clara</h1>
+    </div>
     <div class="hero-divider"></div>
     <div class="hero-hint">❄ &nbsp; CLIQUE PARTOUT POUR DE LA NEIGE &nbsp; ❄</div>
   </section>
 
   <section class="message-section">
-    <div class="message-card">
+    <!-- B — Card with 3D tilt + shine -->
+    <div class="message-card" id="msg-card">
+      <div class="card-shine" id="card-shine"></div>
       <span class="quote-open">"</span>
       <p class="message-text">Clara tu es la personne la plus merveilleuse que j'ai rencontré de ma vie, tu as toujours été ma meilleure amie et tu le restera pour toujours, je te souhaite un joyeux anniversaire car tu le mérites et encore plus&nbsp;! Je t'aime mon bébékadom et je sais qu'un jour tu te réveillera un bon matin totalement guéri, car Dieu fait toujours des miracles.</p>
       <span class="quote-close">"</span>
@@ -472,33 +464,20 @@
 (function () {
   const canvas = document.getElementById('snow-canvas');
   const ctx = canvas.getContext('2d');
-
-  let W = window.innerWidth;
-  let H = window.innerHeight;
-  canvas.width = W;
-  canvas.height = H;
-
+  let W = window.innerWidth, H = window.innerHeight;
+  canvas.width = W; canvas.height = H;
   window.addEventListener('resize', () => {
-    W = window.innerWidth;
-    H = window.innerHeight;
-    canvas.width = W;
-    canvas.height = H;
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W; canvas.height = H;
   });
 
-  /* ── Snowflake colours for light background ── */
+  /* ── Flake colours ── */
   const flakeColors = [
-    [200, 160, 230], // lavender
-    [220, 170, 240], // soft purple
-    [240, 180, 220], // pink
-    [210, 190, 255], // periwinkle
-    [255, 200, 235], // rose
+    [200,160,230],[220,170,240],[240,180,220],[210,190,255],[255,200,235]
   ];
 
   class Flake {
-    constructor(x, y, isBurst) {
-      this.reset(x, y, isBurst);
-    }
-
+    constructor(x, y, isBurst) { this.reset(x, y, isBurst); }
     reset(x, y, isBurst = false) {
       this.x = x !== undefined ? x : Math.random() * W;
       this.y = y !== undefined ? y : Math.random() * -H;
@@ -511,124 +490,129 @@
       this.life   = isBurst ? Math.random() * 80 + 40 : Infinity;
       this.age    = 0;
     }
-
     update() {
-      this.x += this.wind;
-      this.y += this.speed;
-      this.age++;
-      if (this.isBurst) {
-        this.opacity = Math.max(0, this.opacity - 0.014);
-        this.speed += 0.07;
-      }
+      this.x += this.wind; this.y += this.speed; this.age++;
+      if (this.isBurst) { this.opacity = Math.max(0, this.opacity - 0.014); this.speed += 0.07; }
     }
-
     draw() {
-      const [r, g, b] = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r},${g},${b},${this.opacity})`;
-      ctx.fill();
+      const [r,g,b] = this.color;
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${this.opacity})`; ctx.fill();
     }
-
-    isDead() {
-      return this.y > H + 10 || this.age > this.life || this.opacity <= 0;
-    }
+    isDead() { return this.y > H + 10 || this.age > this.life || this.opacity <= 0; }
   }
 
-  /* ── Gold sparkle stars on click ── */
   class Spark {
     constructor(x, y) {
-      this.x = x;
-      this.y = y;
+      this.x = x; this.y = y;
       this.vx = (Math.random() - 0.5) * 6;
       this.vy = (Math.random() - 0.5) * 6 - 1;
       this.opacity = 1;
       this.size = Math.random() * 6 + 4;
       this.rotation = Math.random() * Math.PI * 2;
       this.spin = (Math.random() - 0.5) * 0.2;
-      this.hue = Math.random() * 60 + 300; // pink to purple range
+      this.hue = Math.random() * 60 + 300;
     }
-
     update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.vy += 0.12;
-      this.opacity -= 0.022;
-      this.rotation += this.spin;
+      this.x += this.vx; this.y += this.vy; this.vy += 0.12;
+      this.opacity -= 0.022; this.rotation += this.spin;
     }
-
     draw() {
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.rotation);
+      ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
       ctx.globalAlpha = Math.max(0, this.opacity);
       ctx.fillStyle = `hsl(${this.hue}, 90%, 70%)`;
-      const s = this.size;
-      ctx.beginPath();
-      for (let i = 0; i < 4; i++) {
-        ctx.rotate(Math.PI / 2);
-        ctx.lineTo(0, -s);
-        ctx.lineTo(s * 0.35, -s * 0.35);
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
+      const s = this.size; ctx.beginPath();
+      for (let i = 0; i < 4; i++) { ctx.rotate(Math.PI / 2); ctx.lineTo(0, -s); ctx.lineTo(s * 0.35, -s * 0.35); }
+      ctx.closePath(); ctx.fill(); ctx.restore();
     }
-
     isDead() { return this.opacity <= 0; }
   }
 
-  const flakes = Array.from({ length: 150 }, () => new Flake());
+  const flakes  = Array.from({ length: 150 }, () => new Flake());
   const ripples = [];
-  const sparks = [];
+  const sparks  = [];
 
   function spawnRipple(x, y) {
-    ripples.push({ x, y, r: 0, maxR: 90 + Math.random() * 60, opacity: 0.6, speed: 2.5 + Math.random() * 1.5, hue: Math.random() * 60 + 280 });
-    ripples.push({ x, y, r: 0, maxR: 55 + Math.random() * 30, opacity: 0.4, speed: 3.5 + Math.random(), hue: Math.random() * 60 + 300 });
+    ripples.push({ x, y, r: 0, maxR: 90 + Math.random()*60,  opacity: 0.6, speed: 2.5 + Math.random()*1.5, hue: Math.random()*60+280 });
+    ripples.push({ x, y, r: 0, maxR: 55 + Math.random()*30,  opacity: 0.4, speed: 3.5 + Math.random(),     hue: Math.random()*60+300 });
   }
 
   function animate() {
     ctx.clearRect(0, 0, W, H);
-
-    /* Flakes */
     for (let i = flakes.length - 1; i >= 0; i--) {
-      const f = flakes[i];
-      f.update(); f.draw();
+      const f = flakes[i]; f.update(); f.draw();
       if (f.isDead()) { f.isBurst ? flakes.splice(i, 1) : f.reset(); }
     }
-
-    /* Ripples */
     for (let i = ripples.length - 1; i >= 0; i--) {
-      const rp = ripples[i];
-      rp.r += rp.speed;
-      rp.opacity -= 0.013;
+      const rp = ripples[i]; rp.r += rp.speed; rp.opacity -= 0.013;
       if (rp.opacity <= 0 || rp.r > rp.maxR) { ripples.splice(i, 1); continue; }
-      ctx.beginPath();
-      ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
-      ctx.strokeStyle = `hsla(${rp.hue}, 80%, 70%, ${rp.opacity})`;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(${rp.hue},80%,70%,${rp.opacity})`; ctx.lineWidth = 1.5; ctx.stroke();
     }
-
-    /* Sparks */
     for (let i = sparks.length - 1; i >= 0; i--) {
       sparks[i].update(); sparks[i].draw();
       if (sparks[i].isDead()) sparks.splice(i, 1);
     }
-
     requestAnimationFrame(animate);
   }
-
   animate();
 
   document.addEventListener('click', (e) => {
-    /* Snow burst */
     for (let i = 0; i < 28; i++) flakes.push(new Flake(e.clientX, e.clientY, true));
-    /* Ripple rings */
     spawnRipple(e.clientX, e.clientY);
-    /* Star sparks */
     for (let i = 0; i < 18; i++) sparks.push(new Spark(e.clientX, e.clientY));
   });
+
+  /* ── B — Message card 3D tilt ── */
+  const card  = document.getElementById('msg-card');
+  const shine = document.getElementById('card-shine');
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width  - 0.5; // -0.5 → 0.5
+    const y = (e.clientY - rect.top)  / rect.height - 0.5;
+    card.style.transform  = `perspective(900px) rotateY(${x*14}deg) rotateX(${-y*10}deg) translateZ(12px)`;
+    card.style.boxShadow  = `${-x*20}px ${-y*15}px 50px rgba(180,100,220,0.18), 0 2px 12px rgba(200,150,255,0.1)`;
+    shine.style.background = `radial-gradient(circle at ${(x+0.5)*100}% ${(y+0.5)*100}%, rgba(255,255,255,0.22) 0%, transparent 65%)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition  = 'transform 0.6s ease, box-shadow 0.6s ease';
+    card.style.transform   = '';
+    card.style.boxShadow   = '';
+    shine.style.background = 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18) 0%, transparent 65%)';
+    setTimeout(() => { card.style.transition = 'transform 0.1s ease-out, box-shadow 0.1s ease-out'; }, 600);
+  });
+
+  /* ── C — Mountains parallax + D — Hero gyro ── */
+  const hero   = document.getElementById('hero');
+  const mtnFar  = document.getElementById('mtn-far');
+  const mtnMid  = document.getElementById('mtn-mid');
+  const mtnNear = document.getElementById('mtn-near');
+
+  let mx = 0, my = 0; // smoothed mouse position (-0.5 → 0.5)
+  let tx = 0, ty = 0; // raw target
+
+  document.addEventListener('mousemove', (e) => {
+    tx = e.clientX / W - 0.5;
+    ty = e.clientY / H - 0.5;
+  });
+
+  function update3D() {
+    // Lerp for smooth follow
+    mx += (tx - mx) * 0.06;
+    my += (ty - my) * 0.06;
+
+    // C — Mountains parallax (different depth per layer)
+    mtnFar.style.transform  = `translateX(${mx * 18}px)`;
+    mtnMid.style.transform  = `translateX(${mx * 36}px)`;
+    mtnNear.style.transform = `translateX(${mx * 60}px) translateY(${my * 8}px)`;
+
+    // D — Hero gyroscopic tilt
+    hero.style.transform = `perspective(1400px) rotateY(${mx * 4}deg) rotateX(${-my * 3}deg)`;
+
+    requestAnimationFrame(update3D);
+  }
+  update3D();
+
 })();
 </script>
 </body>
