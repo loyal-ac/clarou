@@ -7,6 +7,12 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --book-w: min(560px, 92vw);
+      --book-h: calc(var(--book-w) * 0.679);
+      --half: calc(var(--book-w) / 2);
+    }
+
     body {
       background: linear-gradient(160deg, #fff0f8 0%, #f5e8ff 35%, #eaefff 65%, #f0fbff 100%);
       min-height: 100vh;
@@ -123,26 +129,29 @@
     }
 
     .book {
-      width: 560px;
-      height: 380px;
+      width: var(--book-w);
+      height: var(--book-h);
       position: relative;
       transform-style: preserve-3d;
       animation: bookFloat 5s ease-in-out infinite;
       filter: drop-shadow(0 30px 40px rgba(160,80,200,.22)) drop-shadow(0 8px 16px rgba(180,100,220,.15));
     }
     @media (max-width: 620px) {
-      .book { width: 320px; height: 220px; }
-      .book-half, .book-page { width: 160px !important; height: 220px !important; }
-      .book-spine { height: 220px !important; }
-      .pf { padding: 14px 12px !important; }
-      .pf .pg-title { font-size: 18px !important; }
-      .pf p, .pf .pg-quote { font-size: 11px !important; }
+      .pf { padding: 14px 10px; }
+      .pg-title { font-size: clamp(12px, 3vw, 18px); }
+      .pf p { font-size: clamp(9px, 2.4vw, 11px); line-height: 1.7; }
+      .pf .pg-quote { font-size: clamp(20px, 5vw, 28px); }
+      .cover-name { font-size: clamp(18px, 8vw, 30px); letter-spacing: 4px; }
+      .cover-subtitle { font-size: 9px; letter-spacing: 2px; }
+      .cover-ornament { font-size: 18px; letter-spacing: 3px; }
+      .pg-deco { font-size: 13px; margin-bottom: 6px; }
+      .pg-snowflakes { font-size: 11px; }
     }
 
     /* Static left half (background for backs of flipped pages) */
     .book-left-base {
       position: absolute; top: 0; left: 0;
-      width: 280px; height: 380px;
+      width: var(--half); height: var(--book-h);
       background: linear-gradient(135deg, #fdf5ff 0%, #fef0ff 100%);
       border-radius: 5px 0 0 5px;
       border: 1px solid rgba(200,140,230,.25);
@@ -165,7 +174,7 @@
     /* Static right base (last page — revealed when all 3 pages flipped) */
     .book-right-base {
       position: absolute; top: 0; right: 0;
-      width: 280px; height: 380px;
+      width: var(--half); height: var(--book-h);
       border-radius: 0 5px 5px 0;
       border: 1px solid rgba(200,140,230,.25);
       border-left: none;
@@ -177,7 +186,7 @@
     .book-spine {
       position: absolute; top: 0; left: 50%;
       transform: translateX(-50%);
-      width: 14px; height: 380px;
+      width: 14px; height: var(--book-h);
       background: linear-gradient(180deg, #e8a0d8, #c070e8, #d890d8, #c070e8, #e8a0d8);
       z-index: 8;
       box-shadow: 0 0 12px rgba(180,80,220,.5), inset 2px 0 4px rgba(255,255,255,.3), inset -2px 0 4px rgba(0,0,0,.1);
@@ -185,8 +194,8 @@
 
     /* ── Flip pages ── */
     .book-page {
-      position: absolute; top: 0; left: 280px;
-      width: 280px; height: 380px;
+      position: absolute; top: 0; left: var(--half);
+      width: var(--half); height: var(--book-h);
       transform-origin: left center;
       transform-style: preserve-3d;
     }
@@ -201,7 +210,7 @@
     /* Page face (front & back) */
     .pf {
       position: absolute; top: 0; left: 0;
-      width: 280px; height: 380px;
+      width: var(--half); height: var(--book-h);
       backface-visibility: hidden;
       padding: 28px 24px 20px;
       display: flex; flex-direction: column;
@@ -447,7 +456,7 @@
       <h1 class="hero-name">Clara</h1>
     </div>
     <div class="hero-divider"></div>
-    <div class="hero-hint">❄ &nbsp; CLIQUE PARTOUT POUR DE LA NEIGE &nbsp; ❄</div>
+    <div class="hero-hint" id="hero-hint">❄ &nbsp; CLIQUE PARTOUT POUR DE LA NEIGE &nbsp; ❄</div>
   </section>
 
   <!-- 3D BOOK -->
@@ -559,7 +568,7 @@
       <button class="book-btn" id="btn-prev" disabled>‹</button>
       <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
         <div class="book-indicator" id="book-indicator">Couverture</div>
-        <div class="book-hint">← → pour tourner les pages</div>
+        <div class="book-hint" id="book-hint">← → pour tourner les pages</div>
       </div>
       <button class="book-btn" id="btn-next">›</button>
     </div>
@@ -622,30 +631,53 @@
   }
   animate();
 
+  function triggerSnow(x, y) {
+    for(let i=0;i<28;i++)flakes.push(new Flake(x,y,true));
+    spawnRipple(x,y);
+    for(let i=0;i<18;i++)sparks.push(new Spark(x,y));
+  }
+
   document.addEventListener('click',(e)=>{
     if(e.target.closest('.book-scene')||e.target.closest('.book-nav'))return;
-    for(let i=0;i<28;i++)flakes.push(new Flake(e.clientX,e.clientY,true));
-    spawnRipple(e.clientX,e.clientY);
-    for(let i=0;i<18;i++)sparks.push(new Spark(e.clientX,e.clientY));
+    triggerSnow(e.clientX, e.clientY);
   });
 
+  /* Touch snow — evite le double-déclenchement avec click */
+  let lastTouch = 0;
+  document.addEventListener('touchend',(e)=>{
+    if(e.target.closest('.book-scene')||e.target.closest('.book-nav'))return;
+    lastTouch = Date.now();
+    const t = e.changedTouches[0];
+    triggerSnow(t.clientX, t.clientY);
+    e.preventDefault();
+  }, { passive: false });
+
   /* ══════════════════════════════
-     MOUSE 3D (mountains + hero)
+     MOUSE 3D (mountains + hero) — désactivé sur touch
   ══════════════════════════════ */
   const hero=document.getElementById('hero');
   const mtnFar=document.getElementById('mtn-far');
   const mtnMid=document.getElementById('mtn-mid');
   const mtnNear=document.getElementById('mtn-near');
+  const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
   let mx=0,my=0,tx=0,ty=0;
-  document.addEventListener('mousemove',(e)=>{tx=e.clientX/W-.5;ty=e.clientY/H-.5;});
-  (function update3D(){
-    mx+=(tx-mx)*.06; my+=(ty-my)*.06;
-    mtnFar.style.transform=`translateX(${mx*18}px)`;
-    mtnMid.style.transform=`translateX(${mx*36}px)`;
-    mtnNear.style.transform=`translateX(${mx*60}px) translateY(${my*8}px)`;
-    hero.style.transform=`perspective(1400px) rotateY(${mx*4}deg) rotateX(${-my*3}deg)`;
-    requestAnimationFrame(update3D);
-  })();
+  if(!isTouchDevice){
+    document.addEventListener('mousemove',(e)=>{tx=e.clientX/W-.5;ty=e.clientY/H-.5;});
+    (function update3D(){
+      mx+=(tx-mx)*.06; my+=(ty-my)*.06;
+      mtnFar.style.transform=`translateX(${mx*18}px)`;
+      mtnMid.style.transform=`translateX(${mx*36}px)`;
+      mtnNear.style.transform=`translateX(${mx*60}px) translateY(${my*8}px)`;
+      hero.style.transform=`perspective(1400px) rotateY(${mx*4}deg) rotateX(${-my*3}deg)`;
+      requestAnimationFrame(update3D);
+    })();
+  }
+
+  /* Adapte les textes d'aide selon le type d'appareil */
+  if(isTouchDevice){
+    document.getElementById('hero-hint').textContent = '❄  TOUCHE L\'ÉCRAN POUR DE LA NEIGE  ❄';
+    document.getElementById('book-hint').textContent = '← glisse pour tourner →';
+  }
 
   /* ══════════════════════════════
      3D BOOK ENGINE
@@ -716,6 +748,20 @@
 
   /* Click on book cover also flips */
   pages[0].querySelector('.front').addEventListener('click', flipForward);
+
+  /* Swipe sur le livre pour mobile */
+  let swipeStartX = 0;
+  const bookScene = document.querySelector('.book-scene');
+  bookScene.addEventListener('touchstart',(e)=>{
+    swipeStartX = e.touches[0].clientX;
+  }, { passive: true });
+  bookScene.addEventListener('touchend',(e)=>{
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    if(Math.abs(dx) > 40) {
+      if(dx < 0) flipForward();
+      else flipBackward();
+    }
+  }, { passive: true });
 
 })();
 </script>
